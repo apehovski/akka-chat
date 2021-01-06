@@ -12,8 +12,8 @@ import scala.concurrent.duration._
 object ChatRoomActor {
   def props(): Props = Props(new ChatRoomActor)
 
-  final case class Login(username: String)
-  final case class Logout(username: String)
+  final case class AddUser(username: String, newUser: ActorRef)
+  final case class RemoveUser(username: String)
 
   final case class MessageToRoom(username: String, msgText: String)
   final case class LoadUserHistory(username: String)
@@ -27,31 +27,28 @@ class ChatRoomActor extends Actor with ActorLogging {
 
   val botNickname = "ChatBot"
 
-  val users = new mutable.HashMap[String, ActorRef]
-  val chatHistory = new mutable.MutableList[(String, String)]
+  val roomUsers = new mutable.HashMap[String, ActorRef]
+  val roomHistory = new mutable.MutableList[(String, String)]
 
 
   def receive = {
-    case Login(username) =>
-      log.info("Login (from " + sender() + "): " + username)
-      val user = context.actorOf(UserActor.props(username, self))
-      users += (username -> user)
-      user ! MessageAdded(botNickname, "Welcome to the chat, buddy")
 
-    case Logout(username) =>
-      log.info("Logout (from " + sender() + "): " + username)
-      users.remove(username)
-        .foreach(userActor => context.stop(userActor))
+    case AddUser(username, newUser) =>
+      roomUsers += (username -> newUser)
+      newUser ! MessageAdded(botNickname, "Welcome to the chat, buddy")
+
+    case RemoveUser(username) =>
+      roomUsers -= username
 
     case MessageToRoom(username, msgText) =>
       log.info("MessageToRoom (from " + sender() + "): " + username + " with text: " + msgText)
-      chatHistory += ((username, msgText))
-      users.foreach(userEntry =>
+      roomHistory += ((username, msgText))
+      roomUsers.foreach(userEntry =>
         userEntry._2 ! UserActor.MessageAdded(username, msgText)
       )
 
     case LoadRoomHistory(limit) =>
-      val historySeq = immutable.Seq(chatHistory.takeRight(limit): _*)
+      val historySeq = immutable.Seq(roomHistory.takeRight(limit): _*)
       sender ! LoadRoomHistoryResp(historySeq)
 
   }

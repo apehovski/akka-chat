@@ -5,13 +5,18 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity, StatusCodes}
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
+import org.chat.auth.AuthActor
+import org.chat.auth.AuthActor.{IsActive, Login}
 import org.chat.chatroom.ChatRoomActor
-import org.chat.chatroom.ChatRoomActor.{LoadRoomHistoryResp, MessageToRoom}
-import spray.json.DefaultJsonProtocol
+import org.chat.chatroom.ChatRoomActor.{LoadRoomHistory, LoadRoomHistoryResp, MessageToRoom}
+import spray.json.{DefaultJsonProtocol, JsValue}
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
@@ -20,42 +25,65 @@ trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
 }
 
 object RunApp extends App with JsonSupport {
-  implicit val system: ActorSystem = ActorSystem("chatRoomSystem")
+  implicit val system: ActorSystem = ActorSystem("chatActorSystem")
   sys.addShutdownHook(system.terminate())
+
+  val authRealm = "secret";
 
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
   implicit val timeout: Timeout = 5.seconds
 
-  val chatRoom: ActorRef = system.actorOf(ChatRoomActor.props(), "chatRoomActor")
+  val generalRoom: ActorRef = system.actorOf(ChatRoomActor.props(), "generalRoomActor")
+  val authActor: ActorRef = system.actorOf(AuthActor.props(generalRoom), "authActor")
 
-  val route =
+  val route = Route.seal {
     concat(
       path("hello") {
         get {
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Say hello to akka-http</h1>"))
+          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, "<h1>Welcome to chat</h1>"))
         }
       },
       path("login" / Segment) { username : String =>
         get {
-          chatRoom ! ChatRoomActor.Login(username)
+          authActor ! Login(username)
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Now you are logged in, $username </h1>"))
         }
       },
-      path("history") {
-        get {
-          complete { (chatRoom ? ChatRoomActor.LoadRoomHistory()).mapTo[LoadRoomHistoryResp] }
-        }
-      },
-      path("sendRoomMessage") {
-        post {
-          entity(as[MessageToRoom]) { request =>
-            chatRoom ! request
-            complete(StatusCodes.OK)
+
+      authenticateBasicAsync(authRealm, chatAuthenticator) { username =>
+        concat(
+          path("history") {
+            get {
+              complete { (generalRoom ? LoadRoomHistory()).mapTo[LoadRoomHistoryResp] }
+            }
+          },
+
+          path("sendRoomMessage") {
+            post {
+              entity(as[JsValue]) { json =>
+                val msgText = json.asJsObject.fields("msgText").convertTo[String]
+                generalRoom ! MessageToRoom(username, msgText)
+                complete(StatusCodes.OK)
+              }
+            }
           }
-        }
-      }
+        )
+      },
+
     )
+  }
+
+  def chatAuthenticator(credentials: Credentials): Future[Option[String]] =
+    credentials match {
+      case c @ Credentials.Provided(username)
+        if c.verify(username) => //username equals password
+        (authActor ? IsActive(username))
+            .mapTo[Boolean]
+            .map(isActive => if (isActive) Some(username) else None)
+
+      case _ => Future.successful(None)
+    }
 
   Http().bindAndHandle(route, "localhost", 8080)
   println(s"Server started at http://localhost:8080/")
