@@ -8,20 +8,21 @@ import akka.http.scaladsl.server.Directives._
 import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
-import org.chat.actors.chatroom.ChatRoomActor
-import org.chat.actors.user.UserActor.LoadHistoryResp
+import org.chat.chatroom.ChatRoomActor
+import org.chat.chatroom.ChatRoomActor.{LoadRoomHistoryResp, MessageToRoom}
 import spray.json.DefaultJsonProtocol
 
 import scala.concurrent.duration._
-import scala.io.StdIn
-import scala.util.{Failure, Success}
 
 trait JsonSupport extends SprayJsonSupport with DefaultJsonProtocol {
-  implicit val loadHistoryRespFormat = jsonFormat1(LoadHistoryResp)
+  implicit val loadRoomHistoryRespFormat = jsonFormat1(LoadRoomHistoryResp)
+  implicit val sendMsgFormat = jsonFormat2(MessageToRoom)
 }
 
 object RunApp extends App with JsonSupport {
   implicit val system: ActorSystem = ActorSystem("chatRoomSystem")
+  sys.addShutdownHook(system.terminate())
+
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
   implicit val timeout: Timeout = 5.seconds
@@ -41,26 +42,22 @@ object RunApp extends App with JsonSupport {
           complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Now you are logged in, $username </h1>"))
         }
       },
-      path("history" / Segment) { username : String =>
+      path("history") {
         get {
-          val userHistoryF = (chatRoom ? ChatRoomActor.LoadUserHistory(username)).mapTo[LoadHistoryResp]
-          onComplete(userHistoryF) {
-            case Success(userHistory) =>
-              complete(userHistory)
-
-            case Failure(ex) =>
-              complete(StatusCodes.InternalServerError, ex.getMessage)
+          complete { (chatRoom ? ChatRoomActor.LoadRoomHistory()).mapTo[LoadRoomHistoryResp] }
+        }
+      },
+      path("sendRoomMessage") {
+        post {
+          entity(as[MessageToRoom]) { request =>
+            chatRoom ! request
+            complete(StatusCodes.OK)
           }
         }
       }
     )
 
-  val bindingFuture = Http().bindAndHandle(route, "localhost", 8080)
-  println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-  StdIn.readLine() // let it run until user presses return
-
-  bindingFuture
-    .flatMap(_.unbind())
-    .onComplete(_ => system.terminate())
+  Http().bindAndHandle(route, "localhost", 8080)
+  println(s"Server started at http://localhost:8080/")
 
 }

@@ -1,15 +1,12 @@
-package org.chat.actors.chatroom
+package org.chat.chatroom
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import akka.pattern.{ask, pipe}
 import akka.util.Timeout
-import org.chat.actors.chatroom.ChatRoomActor._
-import org.chat.actors.user.UserActor
-import org.chat.actors.user.UserActor.MessageAdded
+import org.chat.chatroom.ChatRoomActor._
+import org.chat.user.UserActor
+import org.chat.user.UserActor.MessageAdded
 
-import scala.collection.mutable
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import scala.collection.{immutable, mutable}
 import scala.concurrent.duration._
 
 object ChatRoomActor {
@@ -20,6 +17,9 @@ object ChatRoomActor {
 
   final case class MessageToRoom(username: String, msgText: String)
   final case class LoadUserHistory(username: String)
+
+  final case class LoadRoomHistory(limit: Int = 50)
+  final case class LoadRoomHistoryResp(history: immutable.Seq[(String, String)])
 }
 
 class ChatRoomActor extends Actor with ActorLogging {
@@ -50,12 +50,9 @@ class ChatRoomActor extends Actor with ActorLogging {
         userEntry._2 ! UserActor.MessageAdded(username, msgText)
       )
 
-    case LoadUserHistory(username) =>
-      users
-          .find(userEntry => userEntry._1 == username)
-          .map(userEntry => {
-              userEntry._2 ? UserActor.LoadHistory() pipeTo sender()
-          })
+    case LoadRoomHistory(limit) =>
+      val historySeq = immutable.Seq(chatHistory.takeRight(limit): _*)
+      sender ! LoadRoomHistoryResp(historySeq)
 
   }
 
