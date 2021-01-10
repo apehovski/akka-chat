@@ -18,6 +18,5 @@ sbt "gatling:lastReport"
 ```
 
 
-Useful:
+Useful:  
 https://gatling.io/docs/current/cheat-sheet/
-https://www.scala-sbt.org/1.x/docs/Testing.html

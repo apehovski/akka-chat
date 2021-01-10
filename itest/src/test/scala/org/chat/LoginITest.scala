@@ -20,11 +20,10 @@ class LoginITest extends Simulation {
 
     .exec(http("Perform login")
         .get(BASE_URL + "/login/" + userName)
-        .header("Accept", "*/*")
         .check(status.is(200))
         .check(regex("Now you are logged in").exists))
 
-    .exec(http("Check protected resource with non-existing user")
+    .exec(http("Check protected resource with logged in user")
       .get(BASE_URL + "/history")
       .basicAuth(userName, userName)
       .check(status.is(200))
