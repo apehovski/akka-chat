@@ -3,6 +3,7 @@
 
 #idea
 .idea
+.bsp
 
 #sbt
 dist/*
@@ -17,3 +18,6 @@ project/plugins/project/
 
 # Mac OSX
 .DS_Store
+
+# gatling
+itest/results/*
