@@ -5,7 +5,7 @@ import io.gatling.http.Predef._
 
 object Common {
 
-  val BASE_URL = "http://localhost:8080";
+  val BASE_URL = "http://localhost:8080/api";
 
   val HTTP_CONF = http
     .baseUrl(BASE_URL)
