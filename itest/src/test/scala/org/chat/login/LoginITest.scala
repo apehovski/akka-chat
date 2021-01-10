@@ -1,13 +1,19 @@
-package org.chat
+package org.chat.login
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import org.chat.config.Common._
 import org.chat.config.Routes.{login, roomHistory}
+import org.chat.login.LoginITest.doLogin
+
+object LoginITest {
+  def doLogin(reqName: String) =
+    http(reqName)
+      .get(s"$baseURL/$login/$userName")
+      .check(status.is(200))
+}
 
 class LoginITest extends Simulation {
-
-  val userName = "gatling_user"
 
   val scn = scenario("Login endpoint")
     .exec(http("Check protected resource without auth")
@@ -19,10 +25,8 @@ class LoginITest extends Simulation {
         .basicAuth("unknown_user", "unknown_password")
         .check(status.is(401)))
 
-    .exec(http("Perform login")
-        .get(s"$baseURL/$login/$userName")
-        .check(status.is(200))
-        .check(regex("Now you are logged in").exists))
+    .exec(doLogin("Perform login")
+      .check(regex("Now you are logged in").exists))
 
     .exec(http("Check protected resource with logged in user")
       .get(s"$baseURL/$roomHistory")
