@@ -2,14 +2,19 @@ package org.chat.login
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+import io.gatling.http.request.builder.HttpRequestBuilder
+import org.chat.config.Common
 import org.chat.config.Common._
 import org.chat.config.Routes.{login, roomHistory}
-import org.chat.login.LoginITest.doLogin
+import org.chat.login.LoginITest.doLoginUser1
 
 object LoginITest {
-  def doLogin(reqName: String) =
+  def doLoginUser1: String => HttpRequestBuilder =
+    LoginITest.doLogin(Common.userName1)
+
+  def doLogin(userNickName: UserNameType)(reqName: String) =
     http(reqName)
-      .get(s"$baseURL/$login/$userName")
+      .get(s"$baseURL/$login/$userNickName")
       .check(status.is(200))
 }
 
@@ -25,12 +30,12 @@ class LoginITest extends Simulation {
         .basicAuth("unknown_user", "unknown_password")
         .check(status.is(401)))
 
-    .exec(doLogin("Perform login")
+    .exec(doLoginUser1("Perform login")
       .check(regex("Now you are logged in").exists))
 
     .exec(http("Check protected resource with logged in user")
       .get(s"$baseURL/$roomHistory")
-      .basicAuth(userName, userName)
+      .basicAuth(userName1, userName1)
       .check(status.is(200))
       .check(jsonPath("$.history").is("[]")))
 

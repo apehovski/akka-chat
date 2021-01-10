@@ -6,7 +6,10 @@ import io.gatling.http.Predef._
 object Common {
 
   val baseURL = "http://localhost:8080/api";
-  val userName = "gatling_user"
+
+  type UserNameType = String
+  val userName1: UserNameType = "first_gatling_user"
+  val userName2: UserNameType = "second_gatling_user"
 
   val httpConf = http
     .baseUrl(baseURL)
