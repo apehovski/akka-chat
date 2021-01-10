@@ -9,12 +9,12 @@ class PingITest extends Simulation {
   val scn = scenario("Ping endpoint")
     .exec(
       http("Check ping endpoint")
-        .get(BASE_URL + "/ping")
+        .get(baseURL + "/ping")
         .check(status.is(200))
         .check(regex("pong").exists)
     )
 
   setUp(scn.inject(atOnceUsers(1)))
-    .protocols(HTTP_CONF)
+    .protocols(httpConf)
 
 }

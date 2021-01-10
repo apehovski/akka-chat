@@ -22,7 +22,7 @@ class ChatRoomService (chatRoomActor: ActorRef)(implicit executionContext: Execu
 
   def routes(username: String) =
     concat(
-      path("history") {
+      path("roomHistory") {
         get {
           complete {
             (generalRoom ? LoadRoomHistory()).mapTo[LoadRoomHistoryResp]
