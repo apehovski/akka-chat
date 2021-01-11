@@ -3,12 +3,13 @@ package org.chat
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpEntity
-import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Directives.{authenticateBasicAsync, _}
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
+import org.chat.RunApp.chatAuthenticator
 import org.chat.auth.AuthActor.IsActive
 import org.chat.auth.{AuthActor, AuthService}
 import org.chat.chatroom.{ChatRoomActor, ChatRoomService}
@@ -20,14 +21,14 @@ object RunApp extends App {
   implicit val system: ActorSystem = ActorSystem("chatActorSystem")
   sys.addShutdownHook(system.terminate())
 
-  val authRealm = "secret";
+  val authRealm = "chat-realm";
 
   implicit val materializer = ActorMaterializer()
   implicit val executionContext = system.dispatcher
   implicit val timeout: Timeout = 5.seconds
 
-  val generalRoom: ActorRef = system.actorOf(ChatRoomActor.props(), "generalRoomActor")
-  val authActor: ActorRef = system.actorOf(AuthActor.props(generalRoom), "authActor")
+  private val generalRoom: ActorRef = system.actorOf(ChatRoomActor.props(), "generalRoomActor")
+  private val authActor: ActorRef = system.actorOf(AuthActor.props(generalRoom), "authActor")
 
   val route = Route.seal {
     pathPrefix("api") {
@@ -36,10 +37,7 @@ object RunApp extends App {
           get { complete(HttpEntity("pong")) }
         },
         new AuthService(authActor).routes,
-
-        authenticateBasicAsync(authRealm, chatAuthenticator) { username =>
-          new ChatRoomService(generalRoom).routes(username)
-        },
+        new ChatRoomService(generalRoom).routes
       )
     }
   }

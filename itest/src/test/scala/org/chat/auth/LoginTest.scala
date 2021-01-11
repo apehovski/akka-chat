@@ -1,4 +1,4 @@
-package org.chat.login
+package org.chat.auth
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
@@ -6,11 +6,11 @@ import io.gatling.http.request.builder.HttpRequestBuilder
 import org.chat.config.Common
 import org.chat.config.Common._
 import org.chat.config.Routes.{login, roomHistory}
-import org.chat.login.LoginITest.doLoginUser1
+import org.chat.auth.LoginTest.doLoginUser1
 
-object LoginITest {
+object LoginTest {
   def doLoginUser1: String => HttpRequestBuilder =
-    LoginITest.doLogin(Common.userName1)
+    LoginTest.doLogin(Common.userName1)
 
   def doLogin(userNickName: UserNameType)(reqName: String) =
     http(reqName)
@@ -18,7 +18,7 @@ object LoginITest {
       .check(status.is(200))
 }
 
-class LoginITest extends Simulation {
+class LoginTest extends Simulation {
 
   val scn = scenario("Login endpoint")
     .exec(http("Check protected resource without auth")

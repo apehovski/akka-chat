@@ -5,7 +5,7 @@ import io.gatling.http.Predef._
 import org.chat.config.Common._
 import org.chat.config.Routes._
 import org.chat.generalroom.OneUserRoom.sendMessage
-import org.chat.login.LoginITest
+import org.chat.auth.LoginTest
 
 object TwoUsersRoom {
 
@@ -27,11 +27,11 @@ class TwoUsersRoom extends Simulation {
 
   val scn = scenario("General Room endpoint with 2 users")
 
-    .exec(LoginITest.doLogin(userName1)("Login of user1 for two users room"))
+    .exec(LoginTest.doLogin(userName1)("Login of user1 for two users room"))
     .exec(sendMessage(userName1)("Send message from user 1", msgText1)
       .check(status.is(200)))
 
-    .exec(LoginITest.doLogin(userName2)("Login of user2 for two users room"))
+    .exec(LoginTest.doLogin(userName2)("Login of user2 for two users room"))
     .exec(sendMessage(userName2)("Send message from user 2", msgText2)
       .check(status.is(200)))
 

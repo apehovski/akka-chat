@@ -7,7 +7,7 @@ import org.chat.config.Common
 import org.chat.config.Common._
 import org.chat.config.Routes._
 import org.chat.generalroom.OneUserRoom.sendMessageUser1
-import org.chat.login.LoginITest
+import org.chat.auth.LoginTest
 
 object OneUserRoom {
 
@@ -31,7 +31,7 @@ class OneUserRoom extends Simulation {
 
   val scn = scenario("General Room endpoint with 1 user")
 
-    .exec(LoginITest.doLoginUser1("Login for one user room"))
+    .exec(LoginTest.doLoginUser1("Login for one user room"))
 
     .exec(sendMessageUser1("Send first general room message", msgText1)
       .check(status.is(200)))

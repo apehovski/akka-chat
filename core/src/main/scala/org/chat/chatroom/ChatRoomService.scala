@@ -3,10 +3,10 @@ package org.chat.chatroom
 import akka.actor.ActorRef
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.StatusCodes
-import akka.http.scaladsl.server.Directives.{as, complete, concat, entity, get, path, post}
+import akka.http.scaladsl.server.Directives.{as, authenticateBasicAsync, complete, concat, entity, get, path, post}
 import akka.pattern.ask
 import akka.util.Timeout
-import org.chat.RunApp.generalRoom
+import org.chat.RunApp.{authRealm, chatAuthenticator, generalRoom}
 import org.chat.chatroom.ChatRoomActor.{LoadRoomHistory, LoadRoomHistoryResp, MessageToRoom}
 import spray.json.{DefaultJsonProtocol, JsValue}
 
@@ -17,25 +17,29 @@ trait ChatRoomProtocol extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val sendMsgFormat = jsonFormat2(MessageToRoom)
 }
 
-class ChatRoomService (chatRoomActor: ActorRef)(implicit executionContext: ExecutionContext, timeout: Timeout)
+class ChatRoomService(generalRoomActor: ActorRef)(implicit executionContext: ExecutionContext, timeout: Timeout)
   extends ChatRoomProtocol {
 
-  def routes(username: String) =
+  val routes =
     concat(
       path("roomHistory") {
         get {
-          complete {
-            (generalRoom ? LoadRoomHistory()).mapTo[LoadRoomHistoryResp]
+          authenticateBasicAsync(authRealm, chatAuthenticator) { username =>
+            complete {
+              (generalRoomActor ? LoadRoomHistory()).mapTo[LoadRoomHistoryResp]
+            }
           }
         }
       },
 
       path("sendRoomMessage") {
         post {
-          entity(as[JsValue]) { json =>
-            val msgText = json.asJsObject.fields("msgText").convertTo[String]
-            generalRoom ! MessageToRoom(username, msgText)
-            complete(StatusCodes.OK)
+          authenticateBasicAsync(authRealm, chatAuthenticator) { username =>
+            entity(as[JsValue]) { json =>
+              val msgText = json.asJsObject.fields("msgText").convertTo[String]
+              generalRoomActor ! MessageToRoom(username, msgText)
+              complete(StatusCodes.OK)
+            }
           }
         }
       }
