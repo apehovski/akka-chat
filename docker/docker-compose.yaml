@@ -1,0 +1,16 @@
+version: '2.3'
+
+services:
+  chat-server:
+    image: chat:server
+    build:
+      context: ../
+      dockerfile: docker/server/Dockerfile
+    networks:
+      - internal
+    ports:
+      - 8080:8080
+      - 11001:11001 #debug
+
+networks:
+ internal:

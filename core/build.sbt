@@ -1,6 +1,8 @@
 name := "core"
 version := "1.0"
 
+enablePlugins(JavaAppPackaging)
+
 scalaVersion := "2.12.9"
 
 lazy val akkaVersion = "2.5.25"

@@ -3,13 +3,12 @@ package org.chat
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpEntity
-import akka.http.scaladsl.server.Directives.{authenticateBasicAsync, _}
+import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.util.Timeout
-import org.chat.RunApp.chatAuthenticator
 import org.chat.auth.AuthActor.IsActive
 import org.chat.auth.{AuthActor, AuthService}
 import org.chat.chatroom.{ChatRoomActor, ChatRoomService}
@@ -53,7 +52,7 @@ object RunApp extends App {
       case _ => Future.successful(None)
     }
 
-  Http().bindAndHandle(route, "localhost", 8080)
+  Http().bindAndHandle(route, "0.0.0.0", 8080)
   println(s"Server started at http://localhost:8080/")
 
 }
