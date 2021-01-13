@@ -5,6 +5,7 @@ import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import App from './App';
+import ChatApp from './ChatApp';
 import { loadToDoList } from './actions';
 import toDoApp from './reducers';
 import rootSaga from './sagas';
@@ -21,7 +22,8 @@ store.dispatch(loadToDoList());
 render(
     <Provider store={store}>
         <BrowserRouter>
-            <App />
+            {/*<App />*/}
+            <ChatApp />
         </BrowserRouter>
     </Provider>,
     document.getElementById('root')

@@ -1,12 +1,12 @@
 # UI Module
 
 
-npm start  
-`Starts the development server.`  
+Start development server  
+`npm start`  
 http://localhost:3000
 
-npm run build  
-`Bundles the app into static files for production.`
+Bundles the app into static files for production  
+`npm run build`  
 
-npm test  
-`Starts the test runner.`
+Starts the test runner  
+`npm test`  
