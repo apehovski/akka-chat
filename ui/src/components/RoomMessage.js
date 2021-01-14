@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const RootWrapper = styled.div`
   width: 550px;
-  border: 1px solid black;
+  // border: 1px solid black;
 `
 
 const CircleWrapper = styled.div`
@@ -48,21 +48,21 @@ const MessageTextArea = styled.div`
   clear:both;
   max-width: 490px;
   font-size: 90%;
-  border: 1px solid blue;
+  // border: 1px solid blue;
 `
 
 
-let RoomMessage = ({ msgData }) => {
+let RoomMessage = ({ className, color, username, time, text }) => {
 
   return (
-    <RootWrapper>
+    <RootWrapper className={className}>
       <CircleWrapper>
-        <Circle circleColor={msgData.color} />
+        <Circle circleColor={color} />
       </CircleWrapper>
       <TextPart>
-        <UsernameArea>{msgData.username}</UsernameArea>
-        <TimeArea>{msgData.time}</TimeArea>
-        <MessageTextArea>{msgData.text}</MessageTextArea>
+        <UsernameArea>{username}</UsernameArea>
+        <TimeArea>{time}</TimeArea>
+        <MessageTextArea>{text}</MessageTextArea>
       </TextPart>
     </RootWrapper>
   );

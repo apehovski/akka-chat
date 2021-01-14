@@ -2,6 +2,9 @@ export const ADD_TODO = 'ADD_TODO';
 export const LOAD_TODO_LIST = 'LOAD_TODO_LIST';
 export const RENDER_TODO_LIST = 'RENDER_TODO_LIST';
 
+export const LOAD_GENERAL_MESSAGES = 'LOAD_GENERAL_MESSAGES';
+export const RENDER_GENERAL_MESSAGES = 'RENDER_GENERAL_MESSAGES';
+
 export function addToDo(title) {
   return {
     type: ADD_TODO,
@@ -15,5 +18,11 @@ export function addToDo(title) {
 export function loadToDoList() {
   return {
     type: LOAD_TODO_LIST
+  };
+}
+
+export function loadGeneralMessages() {
+  return {
+    type: LOAD_GENERAL_MESSAGES
   };
 }
