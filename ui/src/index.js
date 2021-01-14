@@ -1,15 +1,14 @@
 import React from 'react';
-import { render } from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
+import {render} from 'react-dom';
+import {Provider} from 'react-redux';
+import {applyMiddleware, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
 import ChatApp from './ChatApp';
-import { loadToDoList } from './actions/actions';
+import {loadToDoList} from './actions/actions';
 import chatApp from './reducers/reducers.js';
 import rootSaga from './sagas/sagas.js';
-import { BrowserRouter } from 'react-router-dom';
-import RoomView from "./containers/RoomView";
+import {BrowserRouter} from 'react-router-dom';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -25,7 +24,6 @@ render(
     <Provider store={store}>
         <BrowserRouter>
             <ChatApp />
-            {/*<RoomView />*/}
         </BrowserRouter>
     </Provider>,
     document.getElementById('root')

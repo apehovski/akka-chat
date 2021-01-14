@@ -6,7 +6,9 @@ import RoomInput from "../components/RoomInput";
 import {loadGeneralMessages} from "../actions/actions";
 
 const StyledWrap = styled.div`
-  // display: inline-block;
+  width: 550px;
+  border: 1px solid black;
+  margin: 0 auto;
 `
 
 const RoomMessageS = styled(RoomMessage)`

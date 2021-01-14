@@ -1,28 +1,12 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import styled from "styled-components";
+import Circle from "./Circle";
 
 const RootWrapper = styled.div`
   width: 550px;
-  // border: 1px solid black;
+  border: 1px solid black;
 `
 
-const CircleWrapper = styled.div`
-  padding: 5px 0px 0px 5px;
-  width: 55px;
-  float: left;
-  // border: 1px solid black;
-`
-
-const Circle = styled.div`
-  height: 40px;
-  width: 40px;
-  background-color: ${props =>
-    props.circleColor || '#bbb'
-  };  
-  border-radius: 50%;
-  display: inline-block;
-`
 const TextPart = styled.div`
   display: inline-block;
 `
@@ -56,9 +40,7 @@ let RoomMessage = ({ className, color, username, time, text }) => {
 
   return (
     <RootWrapper className={className}>
-      <CircleWrapper>
-        <Circle circleColor={color} />
-      </CircleWrapper>
+      <Circle color={color} />
       <TextPart>
         <UsernameArea>{username}</UsernameArea>
         <TimeArea>{time}</TimeArea>
@@ -67,6 +49,5 @@ let RoomMessage = ({ className, color, username, time, text }) => {
     </RootWrapper>
   );
 };
-RoomMessage = connect()(RoomMessage);
 
 export default RoomMessage;

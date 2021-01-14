@@ -3,9 +3,9 @@ import {connect} from 'react-redux';
 import {Redirect, Route, Switch} from "react-router-dom";
 import Container from 'react-bootstrap/Container';
 import LoginForm from './components/LoginForm';
-import RoomView from "./containers/RoomView";
 import ProtectedRoute from "./components/ProtectedRoute";
 import * as utils from "./utils/utils";
+import BaseView from "./containers/BaseView";
 
 const mapStateToProps = state => {
   // console.log('ChatApp state: ' + JSON.stringify(state));
@@ -29,7 +29,7 @@ class ChatApp extends Component {
                  }}
           />
 
-          <ProtectedRoute path='/chat' component={RoomView} auth={utils.isLoggedIn()} />
+          <ProtectedRoute path='/chat' component={BaseView} auth={utils.isLoggedIn()} />
           <Route exact path="/login" component={LoginForm} />
         </Switch>
       </Container>
