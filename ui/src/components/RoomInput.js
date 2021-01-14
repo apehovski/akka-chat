@@ -8,7 +8,9 @@ import Button from "react-bootstrap/Button";
 
 const RootWrapper = styled.div`
   width: 550px;
-  // border: 1px solid black;
+  position: fixed;
+  bottom: 0;
+  padding-bottom: 30px;
   
   input.form-control {
     box-shadow: none;

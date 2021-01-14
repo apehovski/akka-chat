@@ -7,8 +7,12 @@ import {loadGeneralMessages} from "../actions/actions";
 
 const StyledWrap = styled.div`
   width: 550px;
-  border: 1px solid black;
   margin: 0 auto;
+  overflow-y: scroll;
+  max-height: 85vh;
+  border: 1px solid #dee2e6;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
 `
 
 const RoomMessageS = styled(RoomMessage)`

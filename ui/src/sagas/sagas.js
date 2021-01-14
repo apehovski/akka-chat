@@ -19,7 +19,7 @@ export function* loadToDoList() {
 }
 
 export function* fetchGeneralMessages() {
-  const data = [msgData1, msgData2, msgData3]
+  const data = [msgData1, msgData2, msgData3, msgData4, msgData5, msgData6, msgData7]
   yield put({ type: RENDER_GENERAL_MESSAGES, messageList: data });
 }
 
@@ -68,6 +68,30 @@ const msgData2 = {
   text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
 };
 const msgData3 = {
+  color: generateColor(),
+  username: 'User Third',
+  time: '19:52',
+  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
+};
+const msgData4 = {
+  color: generateColor(),
+  username: 'User Third',
+  time: '19:52',
+  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
+};
+const msgData5 = {
+  color: generateColor(),
+  username: 'User Third',
+  time: '19:52',
+  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
+};
+const msgData6 = {
+  color: generateColor(),
+  username: 'User Third',
+  time: '19:52',
+  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
+};
+const msgData7 = {
   color: generateColor(),
   username: 'User Third',
   time: '19:52',

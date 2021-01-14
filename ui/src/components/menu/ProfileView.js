@@ -4,34 +4,35 @@ import Circle from "../Circle";
 
 
 const StyledWrapper = styled.div`
-  height: 80px;
-  // background: #ABDDE5;
-  border: 1px solid black;
+  height: 50px;
+  // border: 1px solid black;
 `
 
 const LeftArea = styled.div`
   display: inline-block;
   width: 80%;
-  height: 100%;
-  border: 1px solid blue;
+  // border: 1px solid blue;
 `
 const UserNameArea = styled.div`
   font-weight: 600;
   float: left;
-  border: 1px solid black;
+  margin: 5px 0 10px 5px;
+  user-select: none;
+  // border: 1px solid black;
 `
 const LogoutLink = styled.div`
   font-size: 80%;
   clear: both;
-  border: 1px solid black;
+  margin: 0 0 0 5px;
+  // border: 1px solid black;
 `
 
 const RightArea = styled.div`
   display: inline-block;
   width: 20%;
   height: 100%;
-  border: 1px solid red;
-  vertical-align: top; //important
+  margin: 5px 0 0 0;
+  vertical-align: top; //important property
 `
 
 export default () => (

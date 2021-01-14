@@ -3,8 +3,6 @@ import styled from "styled-components";
 import Circle from "./Circle";
 
 const RootWrapper = styled.div`
-  width: 550px;
-  border: 1px solid black;
 `
 
 const TextPart = styled.div`
@@ -16,7 +14,6 @@ const UsernameArea = styled.div`
   font-weight: 600;
   margin-right: 5px;
   font-size: 100%;
-  // border: 1px solid black;
 `
 
 const TimeArea = styled.div`
@@ -25,14 +22,12 @@ const TimeArea = styled.div`
   font-weight: 200;
   font-size: 80%;
   margin-top: 3px; 
-  // border: 1px solid black;
 `
 
 const MessageTextArea = styled.div`
   clear:both;
   max-width: 490px;
   font-size: 90%;
-  // border: 1px solid blue;
 `
 
 

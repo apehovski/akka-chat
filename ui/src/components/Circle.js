@@ -5,7 +5,6 @@ const CircleWrapper = styled.div`
   padding: 5px 0 0 5px;
   width: 55px;
   float: left;
-  border: 1px solid black;
 `
 
 const CircleView = styled.div`
