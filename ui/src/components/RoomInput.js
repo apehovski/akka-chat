@@ -33,6 +33,7 @@ let RoomInput = ({ dispatch, className }) => {
       <Form.Group>
         <InputGroup>
           <FormControl
+            type="text"
             placeholder="Message to #general"
             ref={node => {
               input = node;
