@@ -22,11 +22,12 @@ store.dispatch(loadToDoList());
 
 render(
     // Provider can be removed with useStore, etc. hooks?
+    // BrowserRouter can be removed is useHistory used?
     <Provider store={store}>
         <BrowserRouter>
             {/*<App />*/}
-            {/*<ChatApp />*/}
-            <RoomView />
+            <ChatApp />
+            {/*<RoomView />*/}
         </BrowserRouter>
     </Provider>,
     document.getElementById('root')

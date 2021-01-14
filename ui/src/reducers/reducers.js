@@ -1,15 +1,24 @@
-import { ADD_TODO } from '../actions/actions';
-import { RENDER_TODO_LIST, RENDER_GENERAL_MESSAGES
+import {
+  ADD_TODO, LOGIN_RESP, RENDER_GENERAL_MESSAGES, RENDER_TODO_LIST
 } from '../actions/actions';
 
 
 const initialState = {
+  userProfile: {
+    isLoggedIn: false
+  },
   toDoList: [],
   messageList: [],
 };
 
 export default function chatApp(state = initialState, action) {
   switch (action.type) {
+    case LOGIN_RESP:
+      return {
+        ...state,
+        userProfile: action.userProfile
+      };
+
     case RENDER_TODO_LIST:
       return {
         ...state,
