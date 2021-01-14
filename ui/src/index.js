@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import App from './App';
 import ChatApp from './ChatApp';
 import { loadToDoList } from './actions/actions';
 import chatApp from './reducers/reducers.js';
@@ -25,7 +24,6 @@ render(
     // BrowserRouter can be removed is useHistory used?
     <Provider store={store}>
         <BrowserRouter>
-            {/*<App />*/}
             <ChatApp />
             {/*<RoomView />*/}
         </BrowserRouter>
