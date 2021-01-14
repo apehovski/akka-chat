@@ -33,8 +33,7 @@ export function* sendLoginReqS() {
   // username: action ? action.username : '',
   const data = {
     color: '#bbb',
-    username: 'username',
-    isLoggedIn: true
+    username: 'username'
   }
   yield put({ type: LOGIN_RESP, userProfile: data });
 }

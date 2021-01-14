@@ -1,12 +1,11 @@
+import * as utils from "../utils/utils";
 import {
   ADD_TODO, LOGIN_RESP, RENDER_GENERAL_MESSAGES, RENDER_TODO_LIST
 } from '../actions/actions';
 
 
 const initialState = {
-  userProfile: {
-    isLoggedIn: false
-  },
+  userProfile: {},
   toDoList: [],
   messageList: [],
 };
@@ -14,6 +13,7 @@ const initialState = {
 export default function chatApp(state = initialState, action) {
   switch (action.type) {
     case LOGIN_RESP:
+      utils.logIn();
       return {
         ...state,
         userProfile: action.userProfile

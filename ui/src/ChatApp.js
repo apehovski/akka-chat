@@ -5,9 +5,10 @@ import Container from 'react-bootstrap/Container';
 import LoginForm from './components/LoginForm';
 import RoomView from "./containers/RoomView";
 import ProtectedRoute from "./components/ProtectedRoute";
+import * as utils from "./utils/utils";
 
 const mapStateToProps = state => {
-  console.log('ChatApp state: ' + JSON.stringify(state));
+  // console.log('ChatApp state: ' + JSON.stringify(state));
   return {
     userProfile: state.userProfile
   };
@@ -15,26 +16,20 @@ const mapStateToProps = state => {
 
 class ChatApp extends Component {
   render() {
-    const isLoggedIn = this.props.userProfile.isLoggedIn;
-
     return (
       <Container>
         <Switch>
           <Route exact path="/"
                  render={() => {
-                   console.log('ChatApp. ' +
-                     'isLoggedIn: ' + isLoggedIn
-                   );
-
                    return (
-                     this.props.userProfile.isLoggedIn ?
+                     utils.isLoggedIn() ?
                        <Redirect to="/chat" /> :
                        <Redirect to="/login" />
                    )
                  }}
           />
 
-          <ProtectedRoute path='/chat' component={RoomView} auth={isLoggedIn} />
+          <ProtectedRoute path='/chat' component={RoomView} auth={utils.isLoggedIn()} />
           <Route exact path="/login" component={LoginForm} />
         </Switch>
       </Container>

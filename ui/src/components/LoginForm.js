@@ -1,12 +1,13 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Card from 'react-bootstrap/Card';
-import {Redirect, useHistory} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 import styled from "styled-components";
 import {doLogin} from "../actions/actions";
+import * as utils from "../utils/utils";
 
 const StyledWrap = styled.div`
   margin-top: 15%;
@@ -36,11 +37,13 @@ const StyledWrap = styled.div`
 let LoginForm = () => {
   let input;
 
-  const history = useHistory()
-  const dispatch = useDispatch()
-  const userProfile = useSelector(store => store.userProfile);
-  console.log('LoginForm: ' + JSON.stringify(userProfile))
-  if (userProfile.isLoggedIn) {
+  const dispatch = useDispatch();
+
+  //logging only
+  // const userProfile = useSelector(store => store.userProfile);
+  // console.log('LoginForm: ' + JSON.stringify(userProfile))
+
+  if (utils.isLoggedIn()) {
     return (<Redirect to="/" />);
   }
 
@@ -58,7 +61,6 @@ let LoginForm = () => {
                 }
                 dispatch(doLogin(input.value));
                 input.value = '';
-                // history.push("/");
               }}
             >
               <Form.Group>
