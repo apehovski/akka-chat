@@ -3,7 +3,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import styled from "styled-components";
 import RoomMessage from "../components/RoomMessage";
 import RoomInput from "../components/RoomInput";
-import {loadGeneralMessages} from "../actions";
+import {loadGeneralMessages} from "../actions/actions";
 
 const StyledWrap = styled.div`
   // display: inline-block;

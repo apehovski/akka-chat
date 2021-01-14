@@ -1,6 +1,6 @@
-import { ADD_TODO } from '../actions';
+import { ADD_TODO } from '../actions/actions';
 import { RENDER_TODO_LIST, RENDER_GENERAL_MESSAGES
-} from '../actions';
+} from '../actions/actions';
 
 
 const initialState = {

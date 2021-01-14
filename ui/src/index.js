@@ -6,9 +6,9 @@ import createSagaMiddleware from 'redux-saga';
 
 import App from './App';
 import ChatApp from './ChatApp';
-import { loadToDoList } from './actions';
-import chatApp from './reducers';
-import rootSaga from './sagas';
+import { loadToDoList } from './actions/actions';
+import chatApp from './reducers/reducers.js';
+import rootSaga from './sagas/sagas.js';
 import { BrowserRouter } from 'react-router-dom';
 import RoomView from "./containers/RoomView";
 
@@ -26,7 +26,6 @@ render(
         <BrowserRouter>
             {/*<App />*/}
             {/*<ChatApp />*/}
-            {/*<RoomMessage msgData={msgData}/>*/}
             <RoomView />
         </BrowserRouter>
     </Provider>,

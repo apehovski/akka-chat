@@ -2,7 +2,7 @@ import { all, call, put, takeEvery } from 'redux-saga/effects';
 import {
   LOAD_TODO_LIST, RENDER_TODO_LIST,
   LOAD_GENERAL_MESSAGES, RENDER_GENERAL_MESSAGES
-} from '../actions';
+} from '../actions/actions';
 
 export function* fetchToDoList() {
   const endpoint = 'https://gist.githubusercontent.com/brunokrebs/f1cacbacd53be83940e1e85860b6c65b/raw/to-do-items.json';
