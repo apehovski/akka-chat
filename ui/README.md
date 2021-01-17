@@ -1,9 +1,12 @@
 # UI Module
 
 
-Start development server  
+Start UI application  
 `npm start`  
-http://localhost:3000
+UI available on: http://localhost:3000
+
+Start UI app with locally mocked api  
+`npm run startDev`  
 
 Bundles the app into static files for production  
 `npm run build`  

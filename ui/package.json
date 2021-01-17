@@ -18,8 +18,10 @@
     "styled-components": "^5.2.1",
     "web-vitals": "^0.2.4"
   },
+  "devDependencies": {},
   "scripts": {
     "start": "react-scripts start",
+    "startDev": "NODE_ENV=development react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

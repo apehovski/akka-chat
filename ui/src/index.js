@@ -3,12 +3,12 @@ import {render} from 'react-dom';
 import {Provider} from 'react-redux';
 import {applyMiddleware, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import {BrowserRouter} from 'react-router-dom';
 
 import ChatApp from './ChatApp';
-import {loadToDoList} from './actions/actions';
 import chatApp from './reducers/reducers.js';
 import rootSaga from './sagas/sagas.js';
-import {BrowserRouter} from 'react-router-dom';
+
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -16,11 +16,11 @@ const store = createStore(chatApp, applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(rootSaga);
 
-store.dispatch(loadToDoList());
+// store.dispatch(loadToDoList());
 
 render(
-    // Provider can be removed with useStore, etc. hooks?
-    // BrowserRouter can be removed is useHistory used?
+    // Provider can be removed if useStore, etc. hooks used?
+    // BrowserRouter can be removed if useHistory used?
     <Provider store={store}>
         <BrowserRouter>
             <ChatApp />

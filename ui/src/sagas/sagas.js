@@ -1,11 +1,15 @@
-import { all, call, put, takeEvery } from 'redux-saga/effects';
+import {all, call, put, takeEvery} from 'redux-saga/effects';
 import {
-  LOAD_TODO_LIST, RENDER_TODO_LIST,
-  LOAD_GENERAL_MESSAGES, RENDER_GENERAL_MESSAGES,
-  LOGIN_REQ, LOGIN_RESP
+  LOAD_GENERAL_MESSAGES,
+  LOAD_TODO_LIST,
+  LOGIN_REQ,
+  LOGIN_RESP,
+  RENDER_GENERAL_MESSAGES,
+  RENDER_TODO_LIST
 } from '../actions/actions';
 
-import { generateColor } from '../utils/utils';
+import {isLocalDev} from '../utils/utils';
+import devMessages from '../dev_data/messages';
 
 export function* fetchToDoList() {
   const endpoint = 'https://gist.githubusercontent.com/brunokrebs/f1cacbacd53be83940e1e85860b6c65b/raw/to-do-items.json';
@@ -19,7 +23,11 @@ export function* loadToDoList() {
 }
 
 export function* fetchGeneralMessages() {
-  const data = [msgData1, msgData2, msgData3, msgData4, msgData5, msgData6, msgData7]
+  let data = [];
+  if (isLocalDev()) {
+    data = devMessages;
+  }
+
   yield put({ type: RENDER_GENERAL_MESSAGES, messageList: data });
 }
 
@@ -29,6 +37,16 @@ export function* loadGeneralMessages() {
 
 export function* sendLoginReqS() {
   console.log('saga sendLoginReqS')
+  if (isLocalDev()) {
+    // var mydata = JSON.parse("../dev_data/");
+  }
+  // const endpoint = 'http://localhost:9000/api/login/testname';
+  // const response = yield call(fetch, endpoint);
+  // const respData = yield response.json();
+  // console.log('SAGA: ' + JSON.stringify(respData))
+
+  // yield put({ type: RENDER_TODO_LIST, toDoList: data });
+
   // color: generateColor(),
   // username: action ? action.username : '',
   const data = {
@@ -52,48 +70,3 @@ export default function* rootSaga() {
     loadToDoList(), loadGeneralMessages(), doLoginS()
   ]);
 }
-
-
-//test data
-const msgData1 = {
-  color: generateColor(),
-  username: 'User First',
-  time: '19:47',
-  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
-};
-const msgData2 = {
-  color: generateColor(),
-  username: 'User Second',
-  time: '19:49',
-  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
-};
-const msgData3 = {
-  color: generateColor(),
-  username: 'User Third',
-  time: '19:52',
-  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
-};
-const msgData4 = {
-  color: generateColor(),
-  username: 'User Third',
-  time: '19:52',
-  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
-};
-const msgData5 = {
-  color: generateColor(),
-  username: 'User Third',
-  time: '19:52',
-  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
-};
-const msgData6 = {
-  color: generateColor(),
-  username: 'User Third',
-  time: '19:52',
-  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
-};
-const msgData7 = {
-  color: generateColor(),
-  username: 'User Third',
-  time: '19:52',
-  text: 'Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message Some text message ',
-};
