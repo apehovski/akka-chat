@@ -15,7 +15,7 @@ object ChatRoomActor {
   final case class AddUser(username: String, newUser: ActorRef)
   final case class RemoveUser(username: String)
 
-  final case class MessageToRoom(username: String, msgText: String)
+  final case class MessageToRoom(username: String, text: String)
   final case class LoadUserHistory(username: String)
 
   final case class LoadRoomHistory(limit: Int = 50)
@@ -40,11 +40,11 @@ class ChatRoomActor extends Actor with ActorLogging {
     case RemoveUser(username) =>
       roomUsers -= username
 
-    case MessageToRoom(username, msgText) =>
-      log.info("MessageToRoom (from " + sender() + "): " + username + " with text: " + msgText)
-      roomHistory += ((username, msgText))
+    case MessageToRoom(username, text) =>
+      log.info("MessageToRoom (from " + sender() + "): " + username + " with text: " + text)
+      roomHistory += ((username, text))
       roomUsers.foreach(userEntry =>
-        userEntry._2 ! UserActor.MessageAdded(username, msgText)
+        userEntry._2 ! UserActor.MessageAdded(username, text)
       )
 
     case LoadRoomHistory(limit) =>

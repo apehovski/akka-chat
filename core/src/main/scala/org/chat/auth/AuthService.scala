@@ -1,31 +1,45 @@
 package org.chat.auth
 
 import akka.actor.ActorRef
-import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
-import akka.http.scaladsl.server.Directives.{complete, get, path, _}
-import akka.http.scaladsl.server.Route
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
+import akka.http.scaladsl.server.Directives.{complete, path, _}
+import akka.pattern.ask
 import akka.util.Timeout
 import org.chat.RunApp.{authRealm, chatAuthenticator}
-import org.chat.auth.AuthActor.{Login, Logout}
+import org.chat.auth.AuthActor.{Login, LoginResp, Logout, LogoutResp}
+import spray.json.DefaultJsonProtocol
 
 import scala.concurrent.ExecutionContext
 
-class AuthService(authActor: ActorRef)(implicit executionContext: ExecutionContext, timeout: Timeout) {
+trait AuthServiceProtocol extends SprayJsonSupport with DefaultJsonProtocol {
+  implicit val loginReqFormat = jsonFormat1(Login)
+  implicit val loginRespFormat = jsonFormat2(LoginResp)
+
+  implicit val logoutReqFormat = jsonFormat1(Logout)
+  implicit val logoutRespFormat = jsonFormat2(LogoutResp)
+}
+
+class AuthService(authActor: ActorRef)(implicit executionContext: ExecutionContext, timeout: Timeout)
+  extends AuthServiceProtocol {
 
   lazy val routes = {
     concat(
-      path("login" / Segment) { username: String =>
-        get {
-          authActor ! Login(username)
-          complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Now you are logged in, $username </h1>"))
+      path("login") {
+        post {
+          entity(as[Login]) { req =>
+            complete {
+              (authActor ? req).mapTo[LoginResp]
+            }
+          }
         }
       },
 
       path("logout") {
         authenticateBasicAsync(authRealm, chatAuthenticator) { username =>
-          get {
-            authActor ! Logout(username)
-            complete(HttpEntity(ContentTypes.`text/html(UTF-8)`, s"<h1>Miss you, $username </h1>"))
+          post {
+            complete {
+              (authActor ? Logout(username)).mapTo[LogoutResp]
+            }
           }
         }
       }

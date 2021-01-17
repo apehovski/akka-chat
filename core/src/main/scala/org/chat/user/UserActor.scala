@@ -8,7 +8,7 @@ object UserActor {
   def props(username: String, chatRoom: ActorRef): Props = Props(new UserActor(username, chatRoom))
 
   final case class SendMessageToRoom(msg: String)
-  final case class MessageAdded(username: String, msg: String)
+  final case class MessageAdded(username: String, text: String)
 }
 
 class UserActor(username: String, chatRoom: ActorRef) extends Actor with ActorLogging {

@@ -6,7 +6,7 @@ import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives.{as, authenticateBasicAsync, complete, concat, entity, get, path, post}
 import akka.pattern.ask
 import akka.util.Timeout
-import org.chat.RunApp.{authRealm, chatAuthenticator, generalRoom}
+import org.chat.RunApp.{authRealm, chatAuthenticator}
 import org.chat.chatroom.ChatRoomActor.{LoadRoomHistory, LoadRoomHistoryResp, MessageToRoom}
 import spray.json.{DefaultJsonProtocol, JsValue}
 
@@ -36,8 +36,8 @@ class ChatRoomService(generalRoomActor: ActorRef)(implicit executionContext: Exe
         post {
           authenticateBasicAsync(authRealm, chatAuthenticator) { username =>
             entity(as[JsValue]) { json =>
-              val msgText = json.asJsObject.fields("msgText").convertTo[String]
-              generalRoomActor ! MessageToRoom(username, msgText)
+              val text = json.asJsObject.fields("text").convertTo[String]
+              generalRoomActor ! MessageToRoom(username, text)
               complete(StatusCodes.OK)
             }
           }

@@ -1,7 +1,7 @@
 package org.chat.auth
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import org.chat.auth.AuthActor.{IsActive, Login, Logout}
+import org.chat.auth.AuthActor._
 import org.chat.chatroom.ChatRoomActor.{AddUser, RemoveUser}
 import org.chat.user.UserActor
 
@@ -12,6 +12,9 @@ object AuthActor {
   final case class Logout(username: String)
   final case class IsActive(username: String)
   final case class SessionExpired(username: String) //from TTL
+
+  final case class LoginResp(username: String, loggedIn: Boolean)
+  final case class LogoutResp(username: String, loggedIn: Boolean)
 }
 
 class AuthActor(generalRoom: ActorRef) extends Actor with ActorLogging {
@@ -25,6 +28,7 @@ class AuthActor(generalRoom: ActorRef) extends Actor with ActorLogging {
       val user = context.actorOf(UserActor.props(username, self))
       users += (username -> user)
       generalRoom ! AddUser(username, user)
+      sender ! LoginResp(username, true)
 
     case Logout(username) =>
       log.info("Logout (from " + sender() + "): " + username)
@@ -32,6 +36,7 @@ class AuthActor(generalRoom: ActorRef) extends Actor with ActorLogging {
         .foreach(userActor => context.stop(userActor))
       users -= username
       generalRoom ! RemoveUser(username)
+      sender ! LogoutResp(username, false)
 
     case IsActive(username) =>
       sender ! users.contains(username)

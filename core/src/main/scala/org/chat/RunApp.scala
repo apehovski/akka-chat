@@ -53,6 +53,6 @@ object RunApp extends App {
     }
 
   Http().bindAndHandle(route, "0.0.0.0", 8080)
-  println(s"Server started at http://localhost:8080/")
+  println(s"Server started at http://0.0.0.0:8080/")
 
 }
