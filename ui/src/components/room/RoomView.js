@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import styled from "styled-components";
-import RoomMessage from "../components/RoomMessage";
-import RoomInput from "../components/RoomInput";
-import {loadGeneralMessages} from "../actions/actions";
+import RoomMessage from "./RoomMessage";
+import RoomInput from "./RoomInput";
+import {loadGeneralMessages} from "../../actions/actions";
 
 const StyledWrap = styled.div`
   width: 550px;

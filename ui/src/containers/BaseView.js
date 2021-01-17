@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from "styled-components";
 import LeftMenu from "../components/menu/LeftMenu";
-import RoomView from "./RoomView";
+import RoomView from "../components/room/RoomView";
 import Container from "react-bootstrap/Container";
 import {Col, Row} from "react-bootstrap";
 

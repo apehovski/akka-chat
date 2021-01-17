@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Redirect, Route, Switch} from "react-router-dom";
 import Container from 'react-bootstrap/Container';
-import LoginForm from './components/LoginForm';
-import ProtectedRoute from "./components/ProtectedRoute";
-import * as utils from "./utils/utils";
-import BaseView from "./containers/BaseView";
+
 import * as auth from "./utils/authLocalStorage";
+
+import LoginForm from './containers/LoginForm';
+import ProtectedRoute from "./components/ProtectedRoute";
+import BaseView from "./containers/BaseView";
+import NotFoundView from "./containers/NotFoundView";
 
 const mapStateToProps = state => {
   return {
@@ -29,8 +31,10 @@ class ChatApp extends Component {
                  }}
           />
 
-          <ProtectedRoute path='/chat' component={BaseView} auth={auth.isLoggedIn()} />
+          <ProtectedRoute exact path='/chat' component={BaseView} auth={auth.isLoggedIn()} />
           <Route exact path="/login" component={LoginForm} />
+          <Route path="/404" component={NotFoundView} />
+          <Redirect to="/404" />
         </Switch>
       </Container>
     );
