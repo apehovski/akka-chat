@@ -6,9 +6,9 @@ import LoginForm from './components/LoginForm';
 import ProtectedRoute from "./components/ProtectedRoute";
 import * as utils from "./utils/utils";
 import BaseView from "./containers/BaseView";
+import * as auth from "./utils/authLocalStorage";
 
 const mapStateToProps = state => {
-  // console.log('ChatApp state: ' + JSON.stringify(state));
   return {
     userProfile: state.userProfile
   };
@@ -22,14 +22,14 @@ class ChatApp extends Component {
           <Route exact path="/"
                  render={() => {
                    return (
-                     utils.isLoggedIn() ?
+                     auth.isLoggedIn() ?
                        <Redirect to="/chat" /> :
                        <Redirect to="/login" />
                    )
                  }}
           />
 
-          <ProtectedRoute path='/chat' component={BaseView} auth={utils.isLoggedIn()} />
+          <ProtectedRoute path='/chat' component={BaseView} auth={auth.isLoggedIn()} />
           <Route exact path="/login" component={LoginForm} />
         </Switch>
       </Container>

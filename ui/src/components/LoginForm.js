@@ -1,5 +1,5 @@
 import React from 'react';
-import {connect, useDispatch, useSelector} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -7,7 +7,7 @@ import Card from 'react-bootstrap/Card';
 import {Redirect} from 'react-router-dom';
 import styled from "styled-components";
 import {doLogin} from "../actions/actions";
-import * as utils from "../utils/utils";
+import * as auth from "../utils/authLocalStorage";
 
 const StyledWrap = styled.div`
   margin-top: 15%;
@@ -20,7 +20,6 @@ const StyledWrap = styled.div`
     width: 20%;
     height: 40px;
     font-size: 18px;
-    border: 1px solid black;
   }
   
   .input-group > input::placeholder {
@@ -30,7 +29,6 @@ const StyledWrap = styled.div`
   
   .input-group > .input-group-append > button {
     font-size: 16px;
-    border: 1px solid black;
   }
 `
 
@@ -39,11 +37,7 @@ let LoginForm = () => {
 
   const dispatch = useDispatch();
 
-  //logging only
-  // const userProfile = useSelector(store => store.userProfile);
-  // console.log('LoginForm: ' + JSON.stringify(userProfile))
-
-  if (utils.isLoggedIn()) {
+  if (auth.isLoggedIn()) {
     return (<Redirect to="/" />);
   }
 

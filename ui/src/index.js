@@ -8,6 +8,7 @@ import {BrowserRouter} from 'react-router-dom';
 import ChatApp from './ChatApp';
 import chatApp from './reducers/reducers.js';
 import rootSaga from './sagas/sagas.js';
+import {reloadUser} from "./actions/actions";
 
 
 const sagaMiddleware = createSagaMiddleware();
@@ -16,11 +17,9 @@ const store = createStore(chatApp, applyMiddleware(sagaMiddleware));
 
 sagaMiddleware.run(rootSaga);
 
-// store.dispatch(loadToDoList());
+store.dispatch(reloadUser());
 
 render(
-    // Provider can be removed if useStore, etc. hooks used?
-    // BrowserRouter can be removed if useHistory used?
     <Provider store={store}>
         <BrowserRouter>
             <ChatApp />

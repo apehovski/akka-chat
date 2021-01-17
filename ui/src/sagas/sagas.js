@@ -10,6 +10,8 @@ import {
 
 import {isLocalDev} from '../utils/utils';
 import devMessages from '../dev_data/messages';
+import devLogin from '../dev_data/login';
+import * as auth from "../utils/authLocalStorage";
 
 export function* fetchToDoList() {
   const endpoint = 'https://gist.githubusercontent.com/brunokrebs/f1cacbacd53be83940e1e85860b6c65b/raw/to-do-items.json';
@@ -31,42 +33,30 @@ export function* fetchGeneralMessages() {
   yield put({ type: RENDER_GENERAL_MESSAGES, messageList: data });
 }
 
-export function* loadGeneralMessages() {
+export function* loadGeneralMessagesSaga() {
   yield takeEvery(LOAD_GENERAL_MESSAGES, fetchGeneralMessages);
 }
 
-export function* sendLoginReqS() {
-  console.log('saga sendLoginReqS')
+export function* sendLoginReq(action) {
+  let userProfile;
   if (isLocalDev()) {
-    // var mydata = JSON.parse("../dev_data/");
+    userProfile = devLogin;
+    userProfile.username = action.username;
+    userProfile.color = '#bbb';
   }
-  // const endpoint = 'http://localhost:9000/api/login/testname';
-  // const response = yield call(fetch, endpoint);
-  // const respData = yield response.json();
-  // console.log('SAGA: ' + JSON.stringify(respData))
 
-  // yield put({ type: RENDER_TODO_LIST, toDoList: data });
+  auth.logIn(userProfile);
 
-  // color: generateColor(),
-  // username: action ? action.username : '',
-  const data = {
-    color: '#bbb',
-    username: 'username'
-  }
-  yield put({ type: LOGIN_RESP, userProfile: data });
+  yield put({ type: LOGIN_RESP, userProfile: userProfile });
 }
 
-export function* doLoginS() {
-  console.log('saga doLoginS')
-  yield takeEvery(LOGIN_REQ, sendLoginReqS);
+export function* doLoginSaga() {
+  yield takeEvery(LOGIN_REQ, sendLoginReq);
 }
 
-
-//TODO try `async-await` way?
-//https://stackoverflow.com/questions/43443620/redux-saga-async-await-pattern
 
 export default function* rootSaga() {
   yield all([
-    loadToDoList(), loadGeneralMessages(), doLoginS()
+    loadToDoList(), loadGeneralMessagesSaga(), doLoginSaga()
   ]);
 }

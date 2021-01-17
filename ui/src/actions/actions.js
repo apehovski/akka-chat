@@ -1,3 +1,5 @@
+import * as auth from "../utils/authLocalStorage";
+
 export const ADD_TODO = 'ADD_TODO';
 export const LOAD_TODO_LIST = 'LOAD_TODO_LIST';
 export const RENDER_TODO_LIST = 'RENDER_TODO_LIST';
@@ -6,6 +8,7 @@ export const LOAD_GENERAL_MESSAGES = 'LOAD_GENERAL_MESSAGES';
 export const RENDER_GENERAL_MESSAGES = 'RENDER_GENERAL_MESSAGES';
 export const LOGIN_REQ = 'LOGIN_REQ';
 export const LOGIN_RESP = 'LOGIN_RESP';
+export const RELOAD_USER = 'RELOAD_USER';
 
 export function addToDo(title) {
   return {
@@ -24,11 +27,18 @@ export function loadToDoList() {
 }
 
 export function doLogin(username) {
-  console.log('action doLogin: ' + username);
-
   return {
     type: LOGIN_REQ,
     username: username
+  };
+}
+
+export function reloadUser() {
+  let loadedProfile = auth.reloadUserFromStorage();
+
+  return {
+    type: RELOAD_USER,
+    loadedProfile: loadedProfile
   };
 }
 
