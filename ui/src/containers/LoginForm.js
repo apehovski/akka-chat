@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {connect, useDispatch} from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -33,9 +33,9 @@ const StyledWrap = styled.div`
 `
 
 let LoginForm = () => {
-  let input;
-
   const dispatch = useDispatch();
+
+  const [username, setUsername] = useState('');
 
   if (auth.isLoggedIn()) {
     return (<Redirect to="/" />);
@@ -50,11 +50,7 @@ let LoginForm = () => {
             <Form
               onSubmit={e => {
                 e.preventDefault();
-                if (!input.value.trim()) {
-                  return;
-                }
-                dispatch(doLogin(input.value));
-                input.value = '';
+                dispatch(doLogin(username));
               }}
             >
               <Form.Group>
@@ -62,9 +58,10 @@ let LoginForm = () => {
                   <Form.Control
                     type="text"
                     placeholder="Enter username"
-                    ref={node => {
-                      input = node;
-                    }}
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                    required
+                    maxLength="30"
                   />
                   <InputGroup.Append>
                     <Button type="submit" variant="info">Login</Button>
