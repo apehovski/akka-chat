@@ -55,7 +55,7 @@ export default () => {
       <LeftArea>
         <UserNameArea>{userProfile.username}</UserNameArea>
         <LogoutArea>
-          <Link onClick={e => {
+          <Link to="/" onClick={e => {
               e.preventDefault();
               dispatch(doLogout());
             }}>

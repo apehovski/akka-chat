@@ -1,9 +1,11 @@
-import React, {useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import styled from "styled-components";
+
 import RoomMessage from "./RoomMessage";
 import RoomInput from "./RoomInput";
 import {loadGeneralMessages} from "../../actions/actions";
+
 
 const StyledWrap = styled.div`
   width: 550px;
@@ -19,23 +21,38 @@ const RoomMessageS = styled(RoomMessage)`
   margin-bottom: 10px;
 `
 
-const RoomView = () => {
-  const dispatch = useDispatch();
+const mapStateToProps = store => {
+  return {
+    messageList: store.messageList
+  }
+}
 
-  useEffect(() => {
-    dispatch(loadGeneralMessages());
-  }, [dispatch]);
+class RoomView extends Component {
 
-  const messageList = useSelector(store => store.messageList);
+  constructor(props) {
+    super(props);
+    this.props.dispatch(loadGeneralMessages());
+    this.bottomDivRef = React.createRef();
+  }
 
-  return (
-    <StyledWrap>
-      {messageList.map((item, index) => (
-        <RoomMessageS key={index} {...item} />
-      ))}
-      <RoomInput />
-    </StyledWrap>
-  );
-};
+  componentDidUpdate(prevProps, prevState) {
+    const node = this.bottomDivRef.current;
+    node.scrollIntoView({ behavior: "smooth" });
+  }
+
+  render() {
+    return (
+      <StyledWrap>
+        {this.props.messageList.map((item, index) => (
+          <RoomMessageS key={index} {...item} />
+        ))}
+        <div ref={this.bottomDivRef} />
+        <RoomInput />
+      </StyledWrap>
+    )
+  }
+}
+
+RoomView = connect(mapStateToProps)(RoomView)
 
 export default RoomView;
