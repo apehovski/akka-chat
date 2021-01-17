@@ -5,7 +5,9 @@ import {
   LOGIN_REQ,
   LOGIN_RESP,
   RENDER_GENERAL_MESSAGES,
-  RENDER_TODO_LIST
+  RENDER_MESSAGE,
+  RENDER_TODO_LIST,
+  SEND_MESSAGE
 } from '../actions/actions';
 
 import {isLocalDev} from '../utils/utils';
@@ -54,9 +56,17 @@ export function* doLoginSaga() {
   yield takeEvery(LOGIN_REQ, sendLoginReq);
 }
 
+export function* sendMessageReq(action) {
+  //do server req
+  yield put({ type: RENDER_MESSAGE, text: action.text });
+}
+
+export function* doMessageSaga() {
+  yield takeEvery(SEND_MESSAGE, sendMessageReq);
+}
 
 export default function* rootSaga() {
   yield all([
-    loadToDoList(), loadGeneralMessagesSaga(), doLoginSaga()
+    loadToDoList(), loadGeneralMessagesSaga(), doLoginSaga(), doMessageSaga()
   ]);
 }

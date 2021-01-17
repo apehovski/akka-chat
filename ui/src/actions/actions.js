@@ -10,6 +10,8 @@ export const LOGIN_REQ = 'LOGIN_REQ';
 export const LOGIN_RESP = 'LOGIN_RESP';
 export const RELOAD_USER = 'RELOAD_USER';
 export const LOGOUT = 'LOGOUT';
+export const SEND_MESSAGE = 'SEND_MESSAGE';
+export const RENDER_MESSAGE = 'RENDER_MESSAGE';
 
 export function addToDo(title) {
   return {
@@ -48,6 +50,13 @@ export function doLogout() {
 
   return {
     type: LOGOUT
+  };
+}
+
+export function sendMessage(text) {
+  return {
+    type: SEND_MESSAGE,
+    text: text
   };
 }
 

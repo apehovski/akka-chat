@@ -1,4 +1,13 @@
-import {ADD_TODO, LOGIN_RESP, LOGOUT, RELOAD_USER, RENDER_GENERAL_MESSAGES, RENDER_TODO_LIST} from '../actions/actions';
+import {
+  ADD_TODO,
+  LOGIN_RESP,
+  LOGOUT,
+  RELOAD_USER,
+  RENDER_GENERAL_MESSAGES,
+  RENDER_MESSAGE,
+  RENDER_TODO_LIST
+} from '../actions/actions';
+import {formatMessageDate} from "../utils/utils";
 
 
 const initialState = {
@@ -30,6 +39,26 @@ export default function chatApp(state = initialState, action) {
         ...state,
         userProfile: initialState.userProfile
       };
+
+    case RENDER_MESSAGE: {
+      const newMessage = {
+        color: state.userProfile.color,
+        username: state.userProfile.username,
+        time: formatMessageDate(new Date()),
+        text: action.text
+      }
+      let updMessageList = [
+        ...state.messageList,
+        {
+          ...newMessage
+        }
+      ];
+
+      return {
+        ...state,
+        messageList: updMessageList
+      };
+    }
 
     case RENDER_TODO_LIST:
       return {

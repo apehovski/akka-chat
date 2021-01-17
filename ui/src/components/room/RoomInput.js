@@ -1,10 +1,11 @@
-import React from 'react';
-import {connect} from 'react-redux';
+import React, {useState} from 'react';
+import {connect, useDispatch} from 'react-redux';
 import styled from "styled-components";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
 import {FormControl} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import {sendMessage} from "../../actions/actions";
 
 const RootWrapper = styled.div`
   width: 550px;
@@ -17,19 +18,20 @@ const RootWrapper = styled.div`
   }
 `
 
-let RoomInput = ({ dispatch, className }) => {
-  let input;
+let RoomInput = ({ className }) => {
+  const dispatch = useDispatch();
+  const [msgText, setMsgText] = useState('');
 
   return (
     <RootWrapper className={className}>
       <Form
         onSubmit={e => {
           e.preventDefault();
-          if (!input.value.trim()) {
+          if (!msgText.trim()) {
             return;
           }
-          dispatch(RoomInput(input.value));
-          input.value = '';
+          dispatch(sendMessage(msgText));
+          setMsgText('');
         }}
       >
       <Form.Group>
@@ -37,9 +39,8 @@ let RoomInput = ({ dispatch, className }) => {
           <FormControl
             type="text"
             placeholder="Message to #general"
-            ref={node => {
-              input = node;
-            }}
+            value={msgText}
+            onChange={e => setMsgText(e.target.value)}
           />
           <InputGroup.Append>
             <Button type="submit" variant="secondary">Send</Button>
