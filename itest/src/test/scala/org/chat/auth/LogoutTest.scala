@@ -9,8 +9,7 @@ import org.chat.config.Routes.{logout, roomHistory}
 class LogoutTest extends Simulation {
 
   val scn = scenario("Logout endpoint")
-    .exec(doLoginUser1("Perform login first")
-      .check(regex("Now you are logged in").exists))
+    .exec(doLoginUser1("Perform login first"))
 
     .exec(http("Check protected resource with logged in user")
       .get(s"$baseURL/$roomHistory")
@@ -19,8 +18,10 @@ class LogoutTest extends Simulation {
       .check(jsonPath("$.history").is("[]")))
 
     .exec(http("Perform logout")
-      .get(s"$baseURL/$logout")
+      .post(s"$baseURL/$logout")
       .basicAuth(userName1, userName1)
+      .check(jsonPath("$.username").is(userName1))
+      .check(jsonPath("$.loggedIn").is("false"))
       .check(status.is(200)))
 
     .exec(http("Check protected resource with logged out user")

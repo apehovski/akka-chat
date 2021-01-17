@@ -14,6 +14,7 @@ object Common {
   val httpConf = http
     .baseUrl(baseURL)
     .header("Accept", "*/*")
+    .header("Content-Type", "application/json")
 //  .proxy(Proxy("localhost", 8888).httpsPort(8888)) // for using HTTP proxy like Fiddler
 
 }

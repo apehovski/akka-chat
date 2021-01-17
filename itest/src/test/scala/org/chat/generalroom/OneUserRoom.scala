@@ -18,42 +18,41 @@ object OneUserRoom {
     http(reqName)
       .post(s"$baseURL/$sendRoomMessage")
       .basicAuth(userNickName, userNickName)
-      .header("Content-Type", "application/json")
       .body(StringBody(s"""
-          {"msgText": "$text"}
+          {"text": "$text"}
       """))
 }
 
 class OneUserRoom extends Simulation {
 
-  val msgText1 = "some_text"
-  val msgText2 = "some_text_2"
+  val text1 = "some_text"
+  val text2 = "some_text_2"
 
   val scn = scenario("General Room endpoint with 1 user")
 
     .exec(LoginTest.doLoginUser1("Login for one user room"))
 
-    .exec(sendMessageUser1("Send first general room message", msgText1)
+    .exec(sendMessageUser1("Send first general room message", text1)
       .check(status.is(200)))
 
     .exec(http("Check history")
       .get(s"$baseURL/$roomHistory")
       .basicAuth(userName1, userName1)
       .check(jsonPath("$.history[0][0]").is(userName1))
-      .check(jsonPath("$.history[0][1]").is(msgText1))
+      .check(jsonPath("$.history[0][1]").is(text1))
       .check(jsonPath("$.history[1][0]").notExists)
     )
 
-    .exec(sendMessageUser1("Send second general room message", msgText2)
+    .exec(sendMessageUser1("Send second general room message", text2)
       .check(status.is(200)))
 
     .exec(http("Check history")
       .get(s"$baseURL/$roomHistory")
       .basicAuth(userName1, userName1)
       .check(jsonPath("$.history[0][0]").is(userName1))
-      .check(jsonPath("$.history[0][1]").is(msgText1))
+      .check(jsonPath("$.history[0][1]").is(text1))
       .check(jsonPath("$.history[1][0]").is(userName1))
-      .check(jsonPath("$.history[1][1]").is(msgText2))
+      .check(jsonPath("$.history[1][1]").is(text2))
       .check(jsonPath("$.history[2][0]").notExists)
     )
 

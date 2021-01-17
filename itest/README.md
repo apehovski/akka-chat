@@ -9,7 +9,7 @@ sbt "gatling:test"
 
 Single test:
 ```
-sbt "gatling:testOnly org.chat.login.LoginITest"
+sbt "gatling:testOnly org.chat.auth.LoginTest"
 ```
 
 Report:

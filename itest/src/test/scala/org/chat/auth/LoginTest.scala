@@ -14,7 +14,10 @@ object LoginTest {
 
   def doLogin(userNickName: UserNameType)(reqName: String) =
     http(reqName)
-      .get(s"$baseURL/$login/$userNickName")
+      .post(s"$baseURL/$login")
+      .body(StringBody(s"""
+          {"username": "$userNickName"}
+      """))
       .check(status.is(200))
 }
 
@@ -31,7 +34,9 @@ class LoginTest extends Simulation {
         .check(status.is(401)))
 
     .exec(doLoginUser1("Perform login")
-      .check(regex("Now you are logged in").exists))
+      .check(jsonPath("$.username").is(userName1))
+      .check(jsonPath("$.loggedIn").is("true"))
+    )
 
     .exec(http("Check protected resource with logged in user")
       .get(s"$baseURL/$roomHistory")
