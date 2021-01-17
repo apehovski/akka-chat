@@ -1,7 +1,10 @@
 import React from "react";
 import styled from 'styled-components';
 import Circle from "../Circle";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import {Link, Redirect} from "react-router-dom";
+import {doLogout} from "../../actions/actions";
+import * as auth from "../../utils/authLocalStorage";
 
 
 const StyledWrapper = styled.div`
@@ -21,10 +24,14 @@ const UserNameArea = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
 `
-const LogoutLink = styled.div`
+const LogoutArea = styled.div`
   font-size: 80%;
   clear: both;
   margin: 0 0 0 5px;
+  a {
+    color: #483D8B;
+    text-decoration: none;
+  }
 `
 
 const RightArea = styled.div`
@@ -36,16 +43,25 @@ const RightArea = styled.div`
 `
 
 export default () => {
+  let dispatch = useDispatch();
   const userProfile = useSelector(store => store.userProfile);
+
+  if (!auth.isLoggedIn()) {
+    return (<Redirect to="/" />);
+  }
 
   return (
     <StyledWrapper>
       <LeftArea>
         <UserNameArea>{userProfile.username}</UserNameArea>
-        <LogoutLink>
-          Logout
-          {/*<Nav.Link to="/test">Home</Nav.Link>*/}
-        </LogoutLink>
+        <LogoutArea>
+          <Link onClick={e => {
+              e.preventDefault();
+              dispatch(doLogout());
+            }}>
+            Logout
+          </Link>
+        </LogoutArea>
       </LeftArea>
 
       <RightArea>

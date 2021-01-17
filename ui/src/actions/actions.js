@@ -9,6 +9,7 @@ export const RENDER_GENERAL_MESSAGES = 'RENDER_GENERAL_MESSAGES';
 export const LOGIN_REQ = 'LOGIN_REQ';
 export const LOGIN_RESP = 'LOGIN_RESP';
 export const RELOAD_USER = 'RELOAD_USER';
+export const LOGOUT = 'LOGOUT';
 
 export function addToDo(title) {
   return {
@@ -39,6 +40,14 @@ export function reloadUser() {
   return {
     type: RELOAD_USER,
     loadedProfile: loadedProfile
+  };
+}
+
+export function doLogout() {
+  auth.logOut();
+
+  return {
+    type: LOGOUT
   };
 }
 

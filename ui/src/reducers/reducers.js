@@ -1,4 +1,4 @@
-import {ADD_TODO, LOGIN_RESP, RELOAD_USER, RENDER_GENERAL_MESSAGES, RENDER_TODO_LIST} from '../actions/actions';
+import {ADD_TODO, LOGIN_RESP, LOGOUT, RELOAD_USER, RENDER_GENERAL_MESSAGES, RENDER_TODO_LIST} from '../actions/actions';
 
 
 const initialState = {
@@ -23,6 +23,12 @@ export default function chatApp(state = initialState, action) {
       return {
         ...state,
         userProfile: action.loadedProfile
+      };
+
+    case LOGOUT:
+      return {
+        ...state,
+        userProfile: initialState.userProfile
       };
 
     case RENDER_TODO_LIST:
