@@ -11,6 +11,7 @@ const StyledWrap = styled.div`
   width: 550px;
   margin: 0 auto;
   overflow-y: scroll;
+  min-height: 85vh;
   max-height: 85vh;
   border: 1px solid #dee2e6;
   border-bottom-right-radius: 5px;

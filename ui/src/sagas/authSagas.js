@@ -23,7 +23,7 @@ export function* sendLoginReq(action) {
   }
 
   yield auth.logIn(userProfile);
-  yield put({ type: LOGIN_RESP, userProfile: userProfile });
+  yield put({ type: LOGIN_RESP, userProfile });
 }
 
 export function* doLoginSaga() {

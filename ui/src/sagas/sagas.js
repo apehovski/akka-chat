@@ -15,10 +15,22 @@ export async function post({url, body}) {
   const response = await fetch(config.API + url, {
     method: 'POST',
     headers: {
-      'Accept': 'application/json',
+      'Accept': '*/*',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(body)
+  });
+
+  return await response.json();
+}
+
+export async function get({url, username}) {
+  const response = await fetch(config.API + url, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Basic ' + btoa(username + ':' + username),
+      'Accept': '*/*'
+    }
   });
 
   return await response.json();
