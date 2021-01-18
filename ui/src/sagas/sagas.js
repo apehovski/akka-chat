@@ -1,23 +1,25 @@
 import {all} from 'redux-saga/effects';
 
 import {config} from '../utils/utils';
-import {doLoginSaga} from "./authSagas";
+import {doLoginSaga, doLogoutSaga} from "./authSagas";
 import {doMessageSaga, loadGeneralMessagesSaga} from "./roomSagas";
 
 export default function* rootSaga() {
   yield all([
-    doLoginSaga(),
+    doLoginSaga(), doLogoutSaga(),
     loadGeneralMessagesSaga(), doMessageSaga()
   ]);
 }
 
-export async function post({url, body}) {
+export async function post({url, body, username}) {
+  const headers = new Headers();
+  headers.append('Accept', '*/*')
+  headers.append('Content-Type', 'application/json')
+  addBasicAuth(headers, username);
+
   const response = await fetch(config.API + url, {
     method: 'POST',
-    headers: {
-      'Accept': '*/*',
-      'Content-Type': 'application/json'
-    },
+    headers,
     body: JSON.stringify(body)
   });
 
@@ -25,13 +27,21 @@ export async function post({url, body}) {
 }
 
 export async function get({url, username}) {
+  const headers = new Headers();
+  headers.append('Accept', '*/*')
+  addBasicAuth(headers, username);
+
   const response = await fetch(config.API + url, {
     method: 'GET',
-    headers: {
-      'Authorization': 'Basic ' + btoa(username + ':' + username),
-      'Accept': '*/*'
-    }
+    headers
   });
 
   return await response.json();
+}
+
+function addBasicAuth(headers, username) {
+  if (username !== undefined) {
+    const encoded = btoa(unescape(encodeURIComponent(username + ':' + username)));
+    headers.append('Authorization', 'Basic ' + encoded);
+  }
 }

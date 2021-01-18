@@ -3,7 +3,8 @@ import * as auth from "../utils/authLocalStorage";
 export const LOGIN_REQ = 'LOGIN_REQ';
 export const LOGIN_RESP = 'LOGIN_RESP';
 export const RELOAD_USER = 'RELOAD_USER';
-export const LOGOUT = 'LOGOUT';
+export const LOGOUT_REQ = 'LOGOUT_REQ';
+export const LOGOUT_RESP = 'LOGOUT_RESP';
 
 export function doLogin(username) {
   return {
@@ -22,10 +23,8 @@ export function reloadUser() {
 }
 
 export function doLogout() {
-  auth.logOut();
-
   return {
-    type: LOGOUT
+    type: LOGOUT_REQ
   };
 }
 

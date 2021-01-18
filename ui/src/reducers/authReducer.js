@@ -1,4 +1,4 @@
-import {LOGIN_RESP, LOGOUT, RELOAD_USER} from "../actions/authActions";
+import {LOGIN_RESP, LOGOUT_RESP, RELOAD_USER} from "../actions/authActions";
 
 const initialState = {
   userProfile: {
@@ -22,7 +22,7 @@ export default function authReducer(state = initialState, action) {
         userProfile: action.loadedProfile
       };
 
-    case LOGOUT:
+    case LOGOUT_RESP:
       return {
         ...state,
         userProfile: initialState.userProfile

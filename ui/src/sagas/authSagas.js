@@ -1,9 +1,9 @@
-import {call, put, takeEvery} from "redux-saga/effects";
+import {call, put, select, takeEvery} from "redux-saga/effects";
 
 import {generateColor, isMockDev} from "../utils/utils";
 import devLogin from "../dev_data/login";
 import * as auth from "../utils/authLocalStorage";
-import {LOGIN_REQ, LOGIN_RESP} from "../actions/authActions";
+import {LOGIN_REQ, LOGIN_RESP, LOGOUT_REQ, LOGOUT_RESP} from "../actions/authActions";
 import {post} from "./sagas";
 
 export function* sendLoginReq(action) {
@@ -28,4 +28,22 @@ export function* sendLoginReq(action) {
 
 export function* doLoginSaga() {
   yield takeEvery(LOGIN_REQ, sendLoginReq);
+}
+
+export function* sendLogoutReq(action) {
+  if (!isMockDev()) {
+    const username = yield select(store => store.authReducer.userProfile.username)
+
+    yield call(post, {
+      url: '/logout',
+      username
+    })
+  }
+
+  yield auth.logOut();
+  yield put({ type: LOGOUT_RESP });
+}
+
+export function* doLogoutSaga() {
+  yield takeEvery(LOGOUT_REQ, sendLogoutReq);
 }
