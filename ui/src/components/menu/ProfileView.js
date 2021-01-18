@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Circle from "../Circle";
 import {useDispatch, useSelector} from "react-redux";
 import {Link, Redirect} from "react-router-dom";
-import {doLogout} from "../../actions/actions";
 import * as auth from "../../utils/authLocalStorage";
+import {doLogout} from "../../actions/authActions";
 
 
 const StyledWrapper = styled.div`

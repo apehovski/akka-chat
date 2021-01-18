@@ -8,7 +8,7 @@ import {BrowserRouter} from 'react-router-dom';
 import ChatApp from './ChatApp';
 import chatApp from './reducers/reducers.js';
 import rootSaga from './sagas/sagas.js';
-import {reloadUser} from "./actions/actions";
+import {reloadUser} from "./actions/authActions";
 
 
 const sagaMiddleware = createSagaMiddleware();

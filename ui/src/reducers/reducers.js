@@ -1,12 +1,5 @@
-import {
-  ADD_TODO,
-  LOGIN_RESP,
-  LOGOUT,
-  RELOAD_USER,
-  RENDER_GENERAL_MESSAGES,
-  RENDER_MESSAGE,
-  RENDER_TODO_LIST
-} from '../actions/actions';
+import {RENDER_GENERAL_MESSAGES, RENDER_MESSAGE,} from '../actions/actions';
+import {LOGIN_RESP, LOGOUT, RELOAD_USER} from "../actions/authActions";
 import {formatMessageDate} from "../utils/utils";
 
 
@@ -59,24 +52,6 @@ export default function chatApp(state = initialState, action) {
         messageList: updMessageList
       };
     }
-
-    case RENDER_TODO_LIST:
-      return {
-        ...state,
-        toDoList: action.toDoList
-      };
-
-    case ADD_TODO:
-      let newToDoList = [
-        ...state.toDoList,
-        {
-          ...action.toDoItem
-        }
-      ];
-      return {
-        ...state,
-        toDoList: newToDoList
-      };
 
     case RENDER_GENERAL_MESSAGES:
       return {

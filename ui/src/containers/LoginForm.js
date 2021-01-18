@@ -6,8 +6,8 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Card from 'react-bootstrap/Card';
 import {Redirect} from 'react-router-dom';
 import styled from "styled-components";
-import {doLogin} from "../actions/actions";
 import * as auth from "../utils/authLocalStorage";
+import {doLogin} from "../actions/authActions";
 
 const StyledWrap = styled.div`
   margin-top: 15%;
