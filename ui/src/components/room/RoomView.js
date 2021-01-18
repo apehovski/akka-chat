@@ -23,7 +23,7 @@ const RoomMessageS = styled(RoomMessage)`
 
 const mapStateToProps = store => {
   return {
-    messageList: store.chatApp.messageList
+    messageList: store.roomReducer.messageList
   }
 }
 
