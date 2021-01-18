@@ -1,9 +1,14 @@
 import {call, put, select, takeEvery} from "redux-saga/effects";
 
 import {generateColor, isMockDev} from "../utils/utils";
-import devMessages from "../dev_data/messages";
-import {LOAD_GENERAL_MESSAGES, RENDER_GENERAL_MESSAGES, RENDER_MESSAGE, SEND_MESSAGE} from "../actions/roomActions";
-import {post, get} from "./sagas";
+import devMessages, {addMockMessage} from "../dev_data/messages";
+import {
+  LOAD_GENERAL_MESSAGES,
+  loadGeneralMessages,
+  RENDER_GENERAL_MESSAGES,
+  SEND_MESSAGE
+} from "../actions/roomActions";
+import {get, post} from "./sagas";
 
 export function* fetchGeneralMessages() {
   let messageList = [];
@@ -34,14 +39,21 @@ export function* loadGeneralMessagesSaga() {
 }
 
 export function* sendMessageReq(action) {
-  //do server req
   const userProfile = yield select(store => store.authReducer.userProfile)
 
-  yield put({
-    type: RENDER_MESSAGE,
-    userProfile,
-    text: action.text
-  });
+  if (isMockDev()) {
+    addMockMessage(userProfile.username, userProfile.color, action.text);
+  } else {
+    yield call(post, {
+      url: '/sendRoomMessage',
+      body: {
+        text: action.text
+      },
+      username: userProfile.username
+    })
+  }
+
+  yield put(loadGeneralMessages());
 }
 
 export function* doMessageSaga() {

@@ -23,7 +23,7 @@ export async function post({url, body, username}) {
     body: JSON.stringify(body)
   });
 
-  return await response.json();
+  return await parseResponse(response);
 }
 
 export async function get({url, username}) {
@@ -36,12 +36,23 @@ export async function get({url, username}) {
     headers
   });
 
-  return await response.json();
+  return await parseResponse(response);
 }
 
 function addBasicAuth(headers, username) {
   if (username !== undefined) {
     const encoded = btoa(unescape(encodeURIComponent(username + ':' + username)));
     headers.append('Authorization', 'Basic ' + encoded);
+  }
+}
+
+async function parseResponse(response) {
+  const text = await response.text();
+
+  try {
+    return JSON.parse(text);
+  } catch (err) {
+    console.error(err);
+    return text;
   }
 }

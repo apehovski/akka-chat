@@ -1,4 +1,4 @@
-import {generateColor} from "../utils/utils";
+import {formatMessageDate, generateColor} from "../utils/utils";
 
 const color1 = generateColor();
 const color2 = generateColor();
@@ -47,4 +47,15 @@ const msgData7 = {
   text: 'Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 Some text message_7 ',
 };
 
-export default [msgData1, msgData2, msgData3, msgData4, msgData5, msgData6, msgData7]
+let messages = [msgData1, msgData2, msgData3, msgData4, msgData5, msgData6, msgData7];
+
+export function addMockMessage(username, color, text) {
+  messages.append({
+    color,
+    username,
+    time: formatMessageDate(new Date()),
+    text
+  })
+}
+
+export default messages;
