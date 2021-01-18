@@ -6,7 +6,7 @@ Start UI application
 UI available on: http://localhost:3000
 
 Start UI app with locally mocked api  
-`npm run startDev`  
+`npm run startMock`  
 
 Bundles the app into static files for production  
 `npm run build`  

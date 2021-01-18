@@ -1,4 +1,5 @@
 import {all, call, put, takeEvery} from 'redux-saga/effects';
+
 import {
   LOAD_GENERAL_MESSAGES,
   LOAD_TODO_LIST,
@@ -10,9 +11,9 @@ import {
   SEND_MESSAGE
 } from '../actions/actions';
 
-import {isLocalDev} from '../utils/utils';
 import devMessages from '../dev_data/messages';
 import devLogin from '../dev_data/login';
+import {isMockDev, config, generateColor} from '../utils/utils';
 import * as auth from "../utils/authLocalStorage";
 
 export function* fetchToDoList() {
@@ -28,7 +29,7 @@ export function* loadToDoList() {
 
 export function* fetchGeneralMessages() {
   let data = [];
-  if (isLocalDev()) {
+  if (isMockDev()) {
     data = devMessages;
   }
 
@@ -41,14 +42,21 @@ export function* loadGeneralMessagesSaga() {
 
 export function* sendLoginReq(action) {
   let userProfile;
-  if (isLocalDev()) {
+  if (isMockDev()) {
     userProfile = devLogin;
     userProfile.username = action.username;
     userProfile.color = '#bbb';
+  } else {
+    userProfile = yield call(post, {
+      url: '/login',
+      body: {
+        username: action.username
+      }
+    })
+    userProfile.color = yield generateColor();
   }
 
-  auth.logIn(userProfile);
-
+  yield auth.logIn(userProfile);
   yield put({ type: LOGIN_RESP, userProfile: userProfile });
 }
 
@@ -69,4 +77,18 @@ export default function* rootSaga() {
   yield all([
     loadToDoList(), loadGeneralMessagesSaga(), doLoginSaga(), doMessageSaga()
   ]);
+}
+
+function post({url, body}) {
+  return fetch(config.API + url, {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(body)
+  })
+  .then((response) => {
+    return response.json();
+  })
 }
