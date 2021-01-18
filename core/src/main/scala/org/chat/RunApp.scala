@@ -64,10 +64,6 @@ object RunApp extends App {
     Flow[Message].mapConcat {
       case tm: TextMessage =>
         TextMessage(Source.single("pong: ") ++ tm.textStream) :: Nil
-      case bm: BinaryMessage =>
-        // ignore binary messages but drain content to avoid the stream being clogged
-        bm.dataStream.runWith(Sink.ignore)
-        Nil
     }
 
   Http().bindAndHandle(route, "0.0.0.0", 8080)
