@@ -1,4 +1,4 @@
-import {call, put, takeEvery, select} from "redux-saga/effects";
+import {call, put, select, takeEvery} from "redux-saga/effects";
 
 import {generateColor, isMockDev} from "../utils/utils";
 import devMessages from "../dev_data/messages";
@@ -35,10 +35,11 @@ export function* loadGeneralMessagesSaga() {
 
 export function* sendMessageReq(action) {
   //do server req
-  //TODO select() from effects
+  const userProfile = yield select(store => store.authReducer.userProfile)
+
   yield put({
     type: RENDER_MESSAGE,
-    userProfile: action.userProfile,
+    userProfile,
     text: action.text
   });
 }
