@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import RoomMessage from "./RoomMessage";
 import RoomInput from "./RoomInput";
-import {loadGeneralMessages} from "../../actions/actions";
+import {loadGeneralMessages} from "../../actions/roomActions";
 
 
 const StyledWrap = styled.div`

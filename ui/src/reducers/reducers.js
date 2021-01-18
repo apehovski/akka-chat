@@ -1,6 +1,6 @@
 import {combineReducers} from "redux";
 
-import {RENDER_GENERAL_MESSAGES, RENDER_MESSAGE,} from '../actions/actions';
+import {RENDER_GENERAL_MESSAGES, RENDER_MESSAGE,} from '../actions/roomActions';
 import {formatMessageDate} from "../utils/utils";
 import authReducer from "./authReducer";
 

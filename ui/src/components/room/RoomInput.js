@@ -5,7 +5,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
 import {FormControl} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
-import {sendMessage} from "../../actions/actions";
+import {sendMessage} from "../../actions/roomActions";
 
 const RootWrapper = styled.div`
   width: 550px;
