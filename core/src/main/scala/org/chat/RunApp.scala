@@ -12,6 +12,7 @@ import akka.util.Timeout
 import org.chat.auth.AuthActor.IsActive
 import org.chat.auth.{AuthActor, AuthService}
 import org.chat.chatroom.{ChatRoomActor, ChatRoomService}
+import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -30,14 +31,16 @@ object RunApp extends App {
   private val authActor: ActorRef = system.actorOf(AuthActor.props(generalRoom), "authActor")
 
   val route = Route.seal {
-    pathPrefix("api") {
-      concat(
-        path("ping") {
-          get { complete(HttpEntity("pong")) }
-        },
-        new AuthService(authActor).routes,
-        new ChatRoomService(generalRoom).routes
-      )
+    cors() {
+      pathPrefix("api") {
+        concat(
+          path("ping") {
+            get { complete(HttpEntity("pong")) }
+          },
+          new AuthService(authActor).routes,
+          new ChatRoomService(generalRoom).routes
+        )
+      }
     }
   }
 
