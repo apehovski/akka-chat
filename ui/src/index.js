@@ -6,14 +6,18 @@ import createSagaMiddleware from 'redux-saga';
 import {BrowserRouter} from 'react-router-dom';
 
 import ChatApp from './ChatApp';
-import chatApp from './reducers/reducers.js';
+import rootReducer from './reducers/reducers.js';
 import rootSaga from './sagas/sagas.js';
 import {reloadUser} from "./actions/authActions";
 
 
 const sagaMiddleware = createSagaMiddleware();
 
-const store = createStore(chatApp, applyMiddleware(sagaMiddleware));
+const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
+store.subscribe(() => {
+  // debugging
+  // console.log(store.getState());
+});
 
 sagaMiddleware.run(rootSaga);
 

@@ -8,7 +8,7 @@ export const LOGOUT = 'LOGOUT';
 export function doLogin(username) {
   return {
     type: LOGIN_REQ,
-    username: username
+    username
   };
 }
 
@@ -17,7 +17,7 @@ export function reloadUser() {
 
   return {
     type: RELOAD_USER,
-    loadedProfile: loadedProfile
+    loadedProfile
   };
 }
 

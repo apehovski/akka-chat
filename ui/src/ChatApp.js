@@ -10,9 +10,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import BaseView from "./containers/BaseView";
 import NotFoundView from "./containers/NotFoundView";
 
-const mapStateToProps = state => {
+const mapStateToProps = store => {
   return {
-    userProfile: state.userProfile
+    userProfile: store.authReducer.userProfile
   };
 };
 

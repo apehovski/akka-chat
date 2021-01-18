@@ -44,7 +44,7 @@ const RightArea = styled.div`
 
 export default () => {
   let dispatch = useDispatch();
-  const userProfile = useSelector(store => store.userProfile);
+  const userProfile = useSelector(store => store.authReducer.userProfile);
 
   if (!auth.isLoggedIn()) {
     return (<Redirect to="/" />);

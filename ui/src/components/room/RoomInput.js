@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {connect, useDispatch} from 'react-redux';
+import {connect, useDispatch, useSelector} from 'react-redux';
 import styled from "styled-components";
 import InputGroup from "react-bootstrap/InputGroup";
 import Form from "react-bootstrap/Form";
@@ -20,6 +20,7 @@ const RootWrapper = styled.div`
 
 let RoomInput = ({ className }) => {
   const dispatch = useDispatch();
+  const userProfile = useSelector(store => store.authReducer.userProfile);
   const [msgText, setMsgText] = useState('');
 
   return (
@@ -30,7 +31,7 @@ let RoomInput = ({ className }) => {
           if (!msgText.trim()) {
             return;
           }
-          dispatch(sendMessage(msgText));
+          dispatch(sendMessage(userProfile, msgText));
           setMsgText('');
         }}
       >

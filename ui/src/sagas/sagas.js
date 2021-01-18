@@ -21,7 +21,11 @@ export function* loadGeneralMessagesSaga() {
 
 export function* sendMessageReq(action) {
   //do server req
-  yield put({ type: RENDER_MESSAGE, text: action.text });
+  yield put({
+    type: RENDER_MESSAGE,
+    userProfile: action.userProfile,
+    text: action.text
+  });
 }
 
 export function* doMessageSaga() {
