@@ -4,7 +4,7 @@ import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 import org.chat.config.Common._
 
-class PingITest extends Simulation {
+class PingTest extends Simulation {
 
   val scn = scenario("Ping endpoint")
     .exec(

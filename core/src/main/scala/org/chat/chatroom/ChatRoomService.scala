@@ -5,6 +5,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.server.Directives.{as, authenticateBasicAsync, complete, concat, entity, get, path, post}
 import akka.pattern.ask
+import akka.stream.ActorMaterializer
 import akka.util.Timeout
 import org.chat.RunApp.{authRealm, chatAuthenticator}
 import org.chat.chatroom.ChatRoomActor.{LoadRoomHistory, LoadRoomHistoryResp, MessageToRoom}
@@ -17,7 +18,8 @@ trait ChatRoomProtocol extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val sendMsgFormat = jsonFormat2(MessageToRoom)
 }
 
-class ChatRoomService(generalRoomActor: ActorRef)(implicit executionContext: ExecutionContext, timeout: Timeout)
+class ChatRoomService(generalRoomActor: ActorRef)
+                     (implicit executionContext: ExecutionContext, timeout: Timeout, materializer: ActorMaterializer)
   extends ChatRoomProtocol {
 
   val routes =

@@ -3,16 +3,18 @@ package org.chat
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpEntity
+import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.stream.ActorMaterializer
+import akka.stream.scaladsl.{Flow, Sink, Source}
 import akka.util.Timeout
+import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import org.chat.auth.AuthActor.IsActive
 import org.chat.auth.{AuthActor, AuthService}
 import org.chat.chatroom.{ChatRoomActor, ChatRoomService}
-import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -37,6 +39,9 @@ object RunApp extends App {
           path("ping") {
             get { complete(HttpEntity("pong")) }
           },
+          path("pingWS") {
+            handleWebSocketMessages(pingWSHandler)
+          },
           new AuthService(authActor).routes,
           new ChatRoomService(generalRoom).routes
         )
@@ -53,6 +58,16 @@ object RunApp extends App {
             .map(isActive => if (isActive) Some(username) else None)
 
       case _ => Future.successful(None)
+    }
+
+  def pingWSHandler: Flow[Message, Message, Any] =
+    Flow[Message].mapConcat {
+      case tm: TextMessage =>
+        TextMessage(Source.single("pong: ") ++ tm.textStream) :: Nil
+      case bm: BinaryMessage =>
+        // ignore binary messages but drain content to avoid the stream being clogged
+        bm.dataStream.runWith(Sink.ignore)
+        Nil
     }
 
   Http().bindAndHandle(route, "0.0.0.0", 8080)
