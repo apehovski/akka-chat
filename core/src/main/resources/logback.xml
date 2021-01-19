@@ -3,7 +3,7 @@
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <target>System.out</target>
         <encoder>
-            <pattern>%-5level %d{"yyyy-MM-dd'T'HH:mm:ss.SSS"}Z %logger{0} - %replace(%msg){'[\r\n]+', '\\n'} [%X{akkaSource}] [%thread]%n</pattern>
+            <pattern>%5p | %d{yyyy-MM-dd} %d{HH:mm:ss.SSS} | %logger{25} | %m%n</pattern>
         </encoder>
     </appender>
 
@@ -11,7 +11,7 @@
         <file>logs/app.log</file>
         <append>false</append>
         <encoder>
-            <pattern>%date{yyyy-MM-dd} %X{akkaTimestamp} %-5level[%thread] %logger{1} - %msg [%X{akkaSource}]%n</pattern>
+            <pattern>%5p | %d{yyyy-MM-dd} %d{HH:mm:ss.SSS} | %logger{25} | %m%n | %thread</pattern>
         </encoder>
     </appender>
 

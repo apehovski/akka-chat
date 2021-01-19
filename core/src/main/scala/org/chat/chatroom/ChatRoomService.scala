@@ -2,7 +2,6 @@ package org.chat.chatroom
 
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
-import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.ws.Message
 import akka.http.scaladsl.server.Directives.{as, authenticateBasicAsync, complete, concat, entity, get, handleWebSocketMessages, path, post}
 import akka.pattern.ask
@@ -22,6 +21,9 @@ import scala.concurrent.ExecutionContext
 trait ChatRoomProtocol extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val loadRoomHistoryRespFormat = jsonFormat1(LoadRoomHistoryResp)
   implicit val sendMsgFormat = jsonFormat2(MessageToRoom)
+  implicit val statusOkFormat = jsonFormat1(StatusOk)
+
+  final case class StatusOk(status: String = "ok")
 }
 
 object ChatRoomService {
@@ -51,7 +53,7 @@ class ChatRoomService(generalRoomActor: ActorRef)
             entity(as[JsValue]) { json =>
               val text = json.asJsObject.fields("text").convertTo[String]
               generalRoomActor ! MessageToRoom(username, text)
-              complete(StatusCodes.OK)
+              complete(StatusOk())
             }
           }
         }
