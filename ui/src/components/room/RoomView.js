@@ -36,7 +36,7 @@ class RoomView extends Component {
     this.bottomDivRef = React.createRef();
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
     const node = this.bottomDivRef.current;
     node.scrollIntoView({ behavior: "smooth" });
   }

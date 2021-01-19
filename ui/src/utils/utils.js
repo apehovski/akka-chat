@@ -13,5 +13,6 @@ export function formatMessageDate(datetime) {
 }
 
 export const config = {
-  API: process.env.REACT_APP_SERVER_URL
+  API: process.env.REACT_APP_SERVER_URL,
+  WS_API: process.env.REACT_APP_WS_SERVER_URL,
 }

@@ -2,12 +2,13 @@ import {all} from 'redux-saga/effects';
 
 import {config} from '../utils/utils';
 import {doLoginSaga, doLogoutSaga} from "./authSagas";
-import {doMessageSaga, loadGeneralMessagesSaga} from "./roomSagas";
+import {doMessageSaga, loadGeneralMessagesSaga, wsHandleReceivedMessageSaga} from "./roomSagas";
 
 export default function* rootSaga() {
   yield all([
     doLoginSaga(), doLogoutSaga(),
-    loadGeneralMessagesSaga(), doMessageSaga()
+    loadGeneralMessagesSaga(), doMessageSaga(),
+    wsHandleReceivedMessageSaga()
   ]);
 }
 
@@ -40,7 +41,7 @@ export async function get({url, username}) {
 }
 
 function addBasicAuth(headers, username) {
-  if (username !== undefined) {
+  if (username) {
     const encoded = btoa(unescape(encodeURIComponent(username + ':' + username)));
     headers.append('Authorization', 'Basic ' + encoded);
   }

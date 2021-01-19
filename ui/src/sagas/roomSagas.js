@@ -6,7 +6,9 @@ import {
   LOAD_GENERAL_MESSAGES,
   loadGeneralMessages,
   RENDER_GENERAL_MESSAGES,
-  SEND_MESSAGE
+  RENDER_MESSAGE,
+  SEND_MESSAGE,
+  WS_RECEIVED_MESSAGE
 } from "../actions/roomActions";
 import {get, post} from "./sagas";
 
@@ -43,6 +45,7 @@ export function* sendMessageReq(action) {
 
   if (isMockDev()) {
     addMockMessage(userProfile.username, userProfile.color, action.text);
+    yield put(loadGeneralMessages());
   } else {
     yield call(post, {
       url: '/sendRoomMessage',
@@ -52,10 +55,16 @@ export function* sendMessageReq(action) {
       username: userProfile.username
     })
   }
-
-  yield put(loadGeneralMessages());
 }
 
 export function* doMessageSaga() {
   yield takeEvery(SEND_MESSAGE, sendMessageReq);
+}
+
+export function* wsReceivedMessage(action) {
+  yield put({ type: RENDER_MESSAGE, message: action.message });
+}
+
+export function* wsHandleReceivedMessageSaga() {
+  yield takeEvery(WS_RECEIVED_MESSAGE, wsReceivedMessage);
 }
