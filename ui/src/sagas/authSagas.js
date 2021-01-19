@@ -31,6 +31,9 @@ export function* doLoginSaga() {
 }
 
 export function* sendLogoutReq(action) {
+  yield auth.logOut();
+  yield put({ type: LOGOUT_RESP });
+
   if (!isMockDev()) {
     const username = yield select(store => store.authReducer.userProfile.username)
 
@@ -39,9 +42,6 @@ export function* sendLogoutReq(action) {
       username
     })
   }
-
-  yield auth.logOut();
-  yield put({ type: LOGOUT_RESP });
 }
 
 export function* doLogoutSaga() {
