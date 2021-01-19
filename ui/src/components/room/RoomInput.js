@@ -8,7 +8,13 @@ import Button from "react-bootstrap/Button";
 import {sendMessage} from "../../actions/roomActions";
 
 const RootWrapper = styled.div`
-  width: 550px;
+  @media (min-width: 1024px) {
+    width: 700px;    
+  }
+  @media (max-width: 1024px) {
+    width: 480px;    
+  }
+  
   position: fixed;
   bottom: 0;
   padding-bottom: 30px;
@@ -41,6 +47,7 @@ let RoomInput = ({ className }) => {
             placeholder="Message to #general"
             value={msgText}
             onChange={e => setMsgText(e.target.value)}
+            autoFocus
           />
           <InputGroup.Append>
             <Button type="submit" variant="secondary">Send</Button>

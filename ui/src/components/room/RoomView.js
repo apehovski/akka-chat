@@ -8,11 +8,17 @@ import {loadGeneralMessages} from "../../actions/roomActions";
 
 
 const StyledWrap = styled.div`
-  width: 550px;
   margin: 0 auto;
   overflow-y: scroll;
-  min-height: 85vh;
-  max-height: 85vh;
+  @media (min-width: 770px) {
+    min-height: 85vh;
+    max-height: 85vh;
+  }
+  @media (max-width: 770px) {
+    min-height: 55vh;
+    max-height: 55vh;
+  }
+  
   border: 1px solid #dee2e6;
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;

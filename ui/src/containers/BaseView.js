@@ -7,7 +7,6 @@ import {Col, Row} from "react-bootstrap";
 import WsConnection from "../components/WsConnection";
 
 const ContainerStyled = styled(Container)`
-  width: 80%;
 `
 
 const LeftCol = styled(Col)`
@@ -24,11 +23,11 @@ const BaseView = () => {
     <ContainerStyled>
       <WsConnection />
 
-      <Row className="row">
-        <LeftCol className="col-sm">
+      <Row>
+        <LeftCol xs={6} md={4}>
           <LeftMenu />
         </LeftCol>
-        <RightCol className="col-sm">
+        <RightCol xs={12} md={8}>
           <RoomView />
         </RightCol>
       </Row>
