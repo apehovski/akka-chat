@@ -31,12 +31,12 @@ export function* doLoginSaga() {
 }
 
 export function* sendLogoutReq(action) {
+  const username = yield select(store => store.authReducer.userProfile.username)
+
   yield auth.logOut();
   yield put({ type: LOGOUT_RESP });
 
   if (!isMockDev()) {
-    const username = yield select(store => store.authReducer.userProfile.username)
-
     yield call(post, {
       url: '/logout',
       username
