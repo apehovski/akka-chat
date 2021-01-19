@@ -24,14 +24,14 @@ class AuthActor(generalRoom: ActorRef) extends Actor with ActorLogging {
   def receive: Receive = {
 
     case Login(username) =>
-      log.info("Login (from " + sender() + "): " + username)
+      log.info("Login of: " + username)
       val user = context.actorOf(UserActor.props(username, self))
       users += (username -> user)
       generalRoom ! AddUser(username, user)
       sender ! LoginResp(username, true)
 
     case Logout(username) =>
-      log.info("Logout (from " + sender() + "): " + username)
+      log.info("Logout of: " + username)
       users.get(username)
         .foreach(userActor => context.stop(userActor))
       users -= username

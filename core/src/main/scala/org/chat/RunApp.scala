@@ -3,13 +3,13 @@ package org.chat
 import akka.actor.{ActorRef, ActorSystem}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpEntity
-import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
+import akka.http.scaladsl.model.ws.{Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.directives.Credentials
 import akka.pattern.ask
 import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.scaladsl.{Flow, Source}
 import akka.util.Timeout
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import org.chat.auth.AuthActor.IsActive
@@ -66,7 +66,8 @@ object RunApp extends App {
         TextMessage(Source.single("pong: ") ++ tm.textStream) :: Nil
     }
 
-  Http().bindAndHandle(route, "0.0.0.0", 8080)
-  println(s"Server started at http://0.0.0.0:8080/")
+  Http().bindAndHandle(route, "0.0.0.0", 8080).map { _ =>
+    println(s"Server started at http://0.0.0.0:8080/")
+  }
 
 }

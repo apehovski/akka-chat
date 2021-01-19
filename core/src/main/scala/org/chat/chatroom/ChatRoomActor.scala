@@ -5,6 +5,7 @@ import akka.util.Timeout
 import org.chat.chatroom.ChatRoomActor._
 import org.chat.user.UserActor
 import org.chat.user.UserActor.MessageAdded
+import org.chat.ws.WsActor.{WSUserConnected, WSUserDisconnected}
 
 import scala.collection.{immutable, mutable}
 import scala.concurrent.duration._
@@ -41,7 +42,7 @@ class ChatRoomActor extends Actor with ActorLogging {
       roomUsers -= username
 
     case MessageToRoom(username, text) =>
-      log.info("MessageToRoom (from " + sender() + "): " + username + " with text: " + text)
+      log.info("MessageToRoom from " + username + " with text: " + text)
       roomHistory += ((username, text))
       roomUsers.foreach(userEntry =>
         userEntry._2 ! UserActor.MessageAdded(username, text)
@@ -50,6 +51,17 @@ class ChatRoomActor extends Actor with ActorLogging {
     case LoadRoomHistory(limit) =>
       val historySeq = immutable.Seq(roomHistory.takeRight(limit): _*)
       sender ! LoadRoomHistoryResp(historySeq)
+
+    case wsConnect: WSUserConnected =>
+      roomUsers.get(wsConnect.username)
+        .foreach(_ ! wsConnect)
+
+    case wsDisconnect: WSUserDisconnected =>
+      wsDisconnect.username
+        .map(nick =>
+          roomUsers.get(nick)
+            .foreach(_ ! wsDisconnect)
+        )
 
   }
 
