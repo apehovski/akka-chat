@@ -7,6 +7,8 @@ import org.chat.user.UserActor
 import org.chat.user.UserActor.MessageAdded
 import org.chat.ws.WsActor.{WSUserConnected, WSUserDisconnected}
 
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import scala.collection.{immutable, mutable}
 import scala.concurrent.duration._
 
@@ -20,7 +22,12 @@ object ChatRoomActor {
   final case class LoadUserHistory(username: String)
 
   final case class LoadRoomHistory(limit: Int = 50)
-  final case class LoadRoomHistoryResp(history: immutable.Seq[(String, String)])
+  final case class LoadRoomHistoryResp(history: immutable.Seq[ChatMessage])
+
+  final case class ChatMessage(username: String, text: String,
+                               datetime: String = currDateTime())
+
+  def currDateTime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
 }
 
 class ChatRoomActor extends Actor with ActorLogging {
@@ -29,7 +36,7 @@ class ChatRoomActor extends Actor with ActorLogging {
   val botNickname = "ChatBot"
 
   val roomUsers = new mutable.HashMap[String, ActorRef]
-  val roomHistory = new mutable.MutableList[(String, String)]
+  val roomHistory = new mutable.MutableList[ChatMessage]
 
 
   def receive = {
@@ -43,7 +50,7 @@ class ChatRoomActor extends Actor with ActorLogging {
 
     case MessageToRoom(username, text) =>
       log.info("MessageToRoom from " + username + " with text: " + text)
-      roomHistory += ((username, text))
+      roomHistory += ChatMessage(username, text)
       roomUsers.foreach(userEntry =>
         userEntry._2 ! UserActor.MessageAdded(username, text)
       )

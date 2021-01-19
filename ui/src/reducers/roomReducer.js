@@ -17,7 +17,7 @@ export default function roomReducer(state = initialState, action) {
       const newMessage = {
         color: generateColor(),
         username: action.message.username,
-        time: formatMessageDate(new Date()),
+        time: action.message.datetime,
         text: action.message.text
       }
       let updMessageList = [

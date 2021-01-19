@@ -5,6 +5,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.model.ws.{Message, TextMessage}
 import akka.stream.Materializer
 import akka.stream.scaladsl.{Sink, SourceQueue}
+import org.chat.chatroom.ChatRoomActor.ChatMessage
 import org.chat.ws.WsActor._
 import spray.json._
 
@@ -19,12 +20,11 @@ object WsActor {
 
   sealed trait WsExternal
   final case class WSLogin(username: String) extends WsExternal
-  final case class WSOutputMessage(username: String, text: String) extends WsExternal
 }
 
 trait WsActorProtocol extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val wsLoginFormat = jsonFormat1(WSLogin)
-  implicit val wsOutputMessageFormat = jsonFormat2(WSOutputMessage)
+  implicit val chatMessageFormat = jsonFormat3(ChatMessage)
 }
 
 class WsActor(wsOutputQueue: SourceQueue[Message], generalRoomActor: ActorRef)(implicit materializer: Materializer)
@@ -45,7 +45,7 @@ class WsActor(wsOutputQueue: SourceQueue[Message], generalRoomActor: ActorRef)(i
           .runWith(Sink.ignore)
       }
 
-    case out: WSOutputMessage =>
+    case out: ChatMessage =>
       val outMessage = out.toJson
       log.info("Out WS: " + outMessage.compactPrint)
       wsOutputQueue.offer(TextMessage(outMessage.compactPrint))

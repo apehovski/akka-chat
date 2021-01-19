@@ -1,8 +1,9 @@
 package org.chat.user
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import org.chat.chatroom.ChatRoomActor.ChatMessage
 import org.chat.user.UserActor._
-import org.chat.ws.WsActor.{WSOutputMessage, WSUserConnected, WSUserDisconnected}
+import org.chat.ws.WsActor.{WSUserConnected, WSUserDisconnected}
 
 object UserActor {
   def props(username: String, chatRoom: ActorRef): Props = Props(new UserActor(username, chatRoom))
@@ -17,7 +18,7 @@ class UserActor(username: String, chatRoom: ActorRef) extends Actor with ActorLo
 
     case MessageAdded(fromUser, text) =>
       //send notification via websocket to specific user
-      wsActor.map(_ ! WSOutputMessage(fromUser, text))
+      wsActor.map(_ ! ChatMessage(fromUser, text))
 
     case WSUserConnected(_, newWsActor) =>
       wsActor = Some(newWsActor);

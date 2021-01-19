@@ -27,9 +27,9 @@ export function* fetchGeneralMessages() {
     messageList = messageList.history
       .map(msg => ({
         color: generateColor(),
-        username: msg[0],
-        time: '20:06',
-        text: msg[1],
+        username: msg.username,
+        time: msg.datetime,
+        text: msg.text,
       }));
   }
 

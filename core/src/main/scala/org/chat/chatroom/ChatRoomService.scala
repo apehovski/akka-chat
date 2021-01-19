@@ -9,7 +9,7 @@ import akka.stream.scaladsl.{Flow, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import akka.util.Timeout
 import org.chat.RunApp.{authRealm, chatAuthenticator}
-import org.chat.chatroom.ChatRoomActor.{LoadRoomHistory, LoadRoomHistoryResp, MessageToRoom}
+import org.chat.chatroom.ChatRoomActor.{ChatMessage, LoadRoomHistory, LoadRoomHistoryResp, MessageToRoom}
 import org.chat.chatroom.ChatRoomService.counter
 import org.chat.ws.WsActor
 import org.chat.ws.WsActor.WSDisconnected
@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.ExecutionContext
 
 trait ChatRoomProtocol extends SprayJsonSupport with DefaultJsonProtocol {
+  implicit val messageRespFormat = jsonFormat3(ChatMessage)
   implicit val loadRoomHistoryRespFormat = jsonFormat1(LoadRoomHistoryResp)
   implicit val sendMsgFormat = jsonFormat2(MessageToRoom)
   implicit val statusOkFormat = jsonFormat1(StatusOk)

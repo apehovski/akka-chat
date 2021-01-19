@@ -9,7 +9,7 @@ export function isMockDev() {
 }
 
 export function formatMessageDate(datetime) {
-  return dateFormat(datetime, "HH:MM:ss");
+  return dateFormat(datetime, "dd.mm.yyyy HH:MM:ss");
 }
 
 export const config = {
