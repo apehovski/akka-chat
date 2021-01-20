@@ -1,6 +1,7 @@
 import {call, put, select, takeEvery} from "redux-saga/effects";
 
-import {generateColor, isMockDev} from "../utils/utils";
+import {isMockDev} from "../utils/utils";
+import {getColor, generateAllColors} from "../utils/colorStorage";
 import devMessages, {addMockMessage} from "../dev_data/messages";
 import {
   LOAD_GENERAL_MESSAGES,
@@ -16,8 +17,11 @@ export function* fetchGeneralMessages() {
   let messageList = [];
   if (isMockDev()) {
     messageList = Object.assign([], devMessages)
-  } else {
+    if (!getColor(devMessages[0].username)) {
+      generateAllColors(messageList);
+    }
 
+  } else {
     const username = yield select(store => store.authReducer.userProfile.username)
     messageList = yield call(get, {
       url: '/roomHistory',
@@ -26,11 +30,12 @@ export function* fetchGeneralMessages() {
 
     messageList = messageList.history
       .map(msg => ({
-        color: generateColor(),
         username: msg.username,
         time: msg.datetime,
         text: msg.text,
       }));
+
+    generateAllColors(messageList);
   }
 
   yield put({ type: RENDER_GENERAL_MESSAGES, messageList });
@@ -41,10 +46,10 @@ export function* loadGeneralMessagesSaga() {
 }
 
 export function* sendMessageReq(action) {
-  const userProfile = yield select(store => store.authReducer.userProfile)
+  const username = yield select(store => store.authReducer.userProfile.username)
 
   if (isMockDev()) {
-    addMockMessage(userProfile.username, userProfile.color, action.text);
+    addMockMessage(username, action.text);
     yield put(loadGeneralMessages());
   } else {
     yield call(post, {
@@ -52,7 +57,7 @@ export function* sendMessageReq(action) {
       body: {
         text: action.text
       },
-      username: userProfile.username
+      username
     })
   }
 }

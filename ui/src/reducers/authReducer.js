@@ -3,8 +3,7 @@ import {LOGIN_RESP, LOGOUT_RESP, RELOAD_USER} from "../actions/authActions";
 const initialState = {
   userProfile: {
     "loggedIn": false,
-    "username": '',
-    "color": ''
+    "username": ''
   }
 };
 

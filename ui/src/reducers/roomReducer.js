@@ -1,5 +1,5 @@
 import {RENDER_GENERAL_MESSAGES, RENDER_MESSAGE} from "../actions/roomActions";
-import {generateColor} from "../utils/utils";
+import {getColor} from "../utils/colorStorage";
 
 const initialState = {
   messageList: [],
@@ -8,14 +8,20 @@ const initialState = {
 export default function roomReducer(state = initialState, action) {
   switch (action.type) {
     case RENDER_GENERAL_MESSAGES:
+      const coloredList = action.messageList
+        .map(msg => {
+          msg.color = getColor(msg.username);
+          return msg;
+        })
+
       return {
         ...state,
-        messageList: action.messageList
+        messageList: coloredList
       };
 
     case RENDER_MESSAGE: {
       const newMessage = {
-        color: generateColor(),
+        color: getColor(action.message.username),
         username: action.message.username,
         time: action.message.datetime,
         text: action.message.text

@@ -1,17 +1,15 @@
 import {call, put, select, takeEvery} from "redux-saga/effects";
 
-import {generateColor, isMockDev} from "../utils/utils";
-import devLogin from "../dev_data/login";
+import {isMockDev} from "../utils/utils";
 import * as auth from "../utils/authLocalStorage";
 import {LOGIN_REQ, LOGIN_RESP, LOGOUT_REQ, LOGOUT_RESP} from "../actions/authActions";
 import {post} from "./sagas";
 
 export function* sendLoginReq(action) {
-  let userProfile;
+  let userProfile = {};
   if (isMockDev()) {
-    userProfile = devLogin;
+    userProfile.loggedIn = true;
     userProfile.username = action.username;
-    userProfile.color = '#bbb';
   } else {
     userProfile = yield call(post, {
       url: '/login',
@@ -19,7 +17,6 @@ export function* sendLoginReq(action) {
         username: action.username
       }
     })
-    userProfile.color = yield generateColor();
   }
 
   yield auth.logIn(userProfile);

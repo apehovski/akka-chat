@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Link, Redirect} from "react-router-dom";
 import * as auth from "../../utils/authLocalStorage";
 import {doLogout} from "../../actions/authActions";
+import {getColor} from "../../utils/colorStorage";
 
 
 const StyledWrapper = styled.div`
@@ -64,7 +65,7 @@ export default () => {
       </LeftArea>
 
       <RightArea>
-        <Circle color={userProfile.color}></Circle>
+        <Circle color={getColor(userProfile.username)}></Circle>
       </RightArea>
     </StyledWrapper>
   );
