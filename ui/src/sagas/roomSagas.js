@@ -15,7 +15,7 @@ import {get, post} from "./sagas";
 export function* fetchGeneralMessages() {
   let messageList = [];
   if (isMockDev()) {
-    messageList = devMessages;
+    messageList = Object.assign([], devMessages)
   } else {
 
     const username = yield select(store => store.authReducer.userProfile.username)

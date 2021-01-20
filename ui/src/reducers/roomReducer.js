@@ -1,5 +1,5 @@
 import {RENDER_GENERAL_MESSAGES, RENDER_MESSAGE} from "../actions/roomActions";
-import {formatMessageDate, generateColor} from "../utils/utils";
+import {generateColor} from "../utils/utils";
 
 const initialState = {
   messageList: [],

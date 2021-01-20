@@ -50,7 +50,7 @@ const msgData7 = {
 let messages = [msgData1, msgData2, msgData3, msgData4, msgData5, msgData6, msgData7];
 
 export function addMockMessage(username, color, text) {
-  messages.append({
+  messages.push({
     color,
     username,
     time: formatMessageDate(new Date()),

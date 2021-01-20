@@ -26,8 +26,13 @@ const TimeArea = styled.div`
 
 const MessageTextArea = styled.div`
   clear:both;
-  max-width: 490px;
   font-size: 90%;
+  @media (min-width: 1024px) {
+    width: 650px;    
+  }
+  @media (max-width: 1024px) {
+    width: 400px;    
+  }
 `
 
 

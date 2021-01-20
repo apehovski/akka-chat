@@ -20,7 +20,6 @@ const UserNameArea = styled.div`
   float: left;
   margin: 5px 0 10px 5px;
   user-select: none;
-  max-width: 180px;
   text-overflow: ellipsis;
   overflow: hidden;
 `
