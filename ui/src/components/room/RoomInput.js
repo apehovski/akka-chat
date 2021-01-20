@@ -14,6 +14,9 @@ const RootWrapper = styled.div`
   @media (max-width: 1024px) {
     width: 480px;    
   }
+  @media (max-width: 500px) {
+    max-width: 400px;    
+  }
   
   position: fixed;
   bottom: 0;
