@@ -16,7 +16,7 @@ class WsConnection extends Component {
     super(props);
     const wsSocket = new WebSocket(config.WS_API)
     wsSocket.onopen = event => {
-      console.log('WS connected ' + JSON.stringify(event))
+      console.log('WS connected')
     }
     wsSocket.onmessage = event => {
       const message = JSON.parse(event.data)

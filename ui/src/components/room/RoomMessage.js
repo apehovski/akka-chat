@@ -27,11 +27,12 @@ const TimeArea = styled.div`
 const MessageTextArea = styled.div`
   clear:both;
   font-size: 90%;
+  word-wrap: break-word;
   @media (min-width: 1024px) {
-    width: 650px;    
+    width: 650px;
   }
   @media (max-width: 1024px) {
-    width: 400px;    
+    width: 400px;
   }
 `
 

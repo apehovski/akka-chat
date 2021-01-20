@@ -48,6 +48,7 @@ let RoomInput = ({ className }) => {
             value={msgText}
             onChange={e => setMsgText(e.target.value)}
             autoFocus
+            maxLength="300"
           />
           <InputGroup.Append>
             <Button type="submit" variant="secondary">Send</Button>
