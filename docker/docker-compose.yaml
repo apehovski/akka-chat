@@ -12,5 +12,15 @@ services:
       - 8080:8080
       - 11001:11001 #debug
 
+  chat-ui:
+    image: chat:ui
+    build:
+      context: ../
+      dockerfile: docker/ui/Dockerfile
+    networks:
+      - internal
+    ports:
+      - 9090:80
+
 networks:
  internal:
