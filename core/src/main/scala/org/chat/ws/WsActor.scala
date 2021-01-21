@@ -46,9 +46,9 @@ class WsActor(wsOutputQueue: SourceQueue[Message], generalRoomActor: ActorRef)(i
       }
 
     case out: ChatMessage =>
-      val outMessage = out.toJson
-      log.info("Out WS: " + outMessage.compactPrint)
-      wsOutputQueue.offer(TextMessage(outMessage.compactPrint))
+      val outMessage = out.toJson.compactPrint
+      log.info("Out WS: " + outMessage)
+      wsOutputQueue.offer(TextMessage(outMessage))
 
     case WSDisconnected() =>
       generalRoomActor ! WSUserDisconnected(username)

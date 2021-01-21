@@ -1,16 +1,13 @@
 package org.chat.chatroom
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
-import akka.util.Timeout
 import org.chat.chatroom.ChatRoomActor._
 import org.chat.user.UserActor
-import org.chat.user.UserActor.MessageAdded
 import org.chat.ws.WsActor.{WSUserConnected, WSUserDisconnected}
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import scala.collection.{immutable, mutable}
-import scala.concurrent.duration._
 
 object ChatRoomActor {
   def props(): Props = Props(new ChatRoomActor)
@@ -31,10 +28,6 @@ object ChatRoomActor {
 }
 
 class ChatRoomActor extends Actor with ActorLogging {
-  implicit val timeout: Timeout = 5.seconds
-
-  val botNickname = "ChatBot"
-
   val roomUsers = new mutable.HashMap[String, ActorRef]
   val roomHistory = new mutable.MutableList[ChatMessage]
 
@@ -43,7 +36,6 @@ class ChatRoomActor extends Actor with ActorLogging {
 
     case AddUser(username, newUser) =>
       roomUsers += (username -> newUser)
-      newUser ! MessageAdded(botNickname, "Welcome to the chat, buddy")
 
     case RemoveUser(username) =>
       roomUsers -= username

@@ -6,7 +6,7 @@ import org.chat.chatroom.ChatRoomActor.{AddUser, RemoveUser}
 import org.chat.user.UserActor
 
 object AuthActor {
-  def props(generalRoom: ActorRef): Props = Props(new AuthActor(generalRoom))
+  def props(generalRoom: ActorRef) = Props(new AuthActor(generalRoom))
 
   final case class Login(username: String)
   final case class Logout(username: String)

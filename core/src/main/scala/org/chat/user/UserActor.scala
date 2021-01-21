@@ -6,7 +6,7 @@ import org.chat.user.UserActor._
 import org.chat.ws.WsActor.{WSUserConnected, WSUserDisconnected}
 
 object UserActor {
-  def props(username: String, chatRoom: ActorRef): Props = Props(new UserActor(username, chatRoom))
+  def props(username: String, chatRoom: ActorRef) = Props(new UserActor(username, chatRoom))
 
   final case class MessageAdded(username: String, text: String)
 }
