@@ -1,22 +1,18 @@
-## Integration tests module
+# Integration tests module
 
-### Run perf-tests
+## Run perf-tests
 
-All tests:
+### All tests:
 ```
-sbt "gatling:test"
-```
-
-Single test:
-```
-sbt "gatling:testOnly org.chat.auth.LoginTest"
+sbt gatling:test
 ```
 
-Report:
+### Single test:
 ```
-sbt "gatling:lastReport"
+sbt gatling:testOnly org.chat.auth.LoginTest
 ```
 
-
-Useful:  
-https://gatling.io/docs/current/cheat-sheet/
+### Report:
+```
+sbt gatling:lastReport
+```

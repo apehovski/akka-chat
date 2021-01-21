@@ -1,14 +1,27 @@
 # akka-chat
 
-Pet project for some learning in scope of modern web-technologies
+Pet project for some learning in scope of modern web-technologies.
 
-## Run locally
-In directory /core:  
-`sbt run`
+## Live Demo
+Available here: [web-chat](http://35.242.217.130)  
+Use any login and *feel free to chat!*
 
-## Run on Docker
-In directory /core:  
-`sbt stage`  
+## Features
+* *Akka* stack as solid base for backend
+* *React* stack for front
+* Notifications about new messages via *Websockets*
+* Basic Auth, CORS
+* Fully in-memory storage
+* Integration/performance tests using *Gatling*
+* Dockerized
 
-In directory /docker:  
-`docker-compose up`  
+### Run on Docker
+Zero dependency on jdk/scala/js/npm required.  
+Running-up:  
+1. Substitute **your_ip** in file `/ui/.env.production` with local Docker host
+2. `docker-compose up`
+
+### Run for local development
+See then:  
+* [Server](/core/README.md)  
+* [Frontend](/ui/README.md)  
