@@ -42,6 +42,10 @@ class WsConnection extends Component {
     this.createWsConnectionWithWaiting()
   }
 
+  componentWillUnmount() {
+    this.state.wsSocket.close();
+  }
+
   waitForConnection(wsSocket, callback) {
     if (wsSocket.readyState === 1) {
       callback();

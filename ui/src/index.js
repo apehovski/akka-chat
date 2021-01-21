@@ -8,10 +8,17 @@ import {BrowserRouter} from 'react-router-dom';
 import ChatApp from './ChatApp';
 import rootReducer from './reducers/reducers.js';
 import rootSaga from './sagas/sagas.js';
-import {reloadUser} from "./actions/authActions";
+import {LOGOUT_RESP, reloadUser} from "./actions/authActions";
+import * as auth from "./utils/authLocalStorage";
 
 
-const sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware({
+  onError: () => {
+    //hook for unavailable server
+    auth.logOut();
+    store.dispatch({ type: LOGOUT_RESP })
+  }
+})
 
 const store = createStore(rootReducer, applyMiddleware(sagaMiddleware));
 store.subscribe(() => {
