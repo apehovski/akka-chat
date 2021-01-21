@@ -11,7 +11,6 @@ object AuthActor {
   final case class Login(username: String)
   final case class Logout(username: String)
   final case class IsActive(username: String)
-  final case class SessionExpired(username: String) //from TTL
 
   final case class LoginResp(username: String, loggedIn: Boolean)
   final case class LogoutResp(username: String, loggedIn: Boolean)

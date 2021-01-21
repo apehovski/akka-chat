@@ -16,7 +16,6 @@ object ChatRoomActor {
   final case class RemoveUser(username: String)
 
   final case class MessageToRoom(username: String, text: String)
-  final case class LoadUserHistory(username: String)
 
   final case class LoadRoomHistory(limit: Int = 50)
   final case class LoadRoomHistoryResp(history: immutable.Seq[ChatMessage])

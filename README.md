@@ -6,7 +6,7 @@ Pet project for some learning in scope of modern web-technologies.
 Available on GCP here: [web-chat](http://35.242.217.130)  
 
 ## Features
-* *Akka* stack for backend
+* *Akka* stack for backend (akka-http, akka-streams)
 * *React* stack for front
 * Notifications about new messages via *Websockets*
 * Basic Auth, CORS
