@@ -25,3 +25,4 @@ Running-up:
 See then:  
 * [Server](/core/README.md)  
 * [Frontend](/ui/README.md)  
+* [Integration tests](/itest/README.md)  
