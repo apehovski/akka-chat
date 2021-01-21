@@ -4,7 +4,6 @@ Pet project for some learning in scope of modern web-technologies.
 
 ## Live Demo
 Available on GCP here: [web-chat](http://35.242.217.130)  
-Use any login and *feel free to chat!*
 
 ## Features
 * *Akka* stack as solid base for backend
