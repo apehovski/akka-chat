@@ -15,7 +15,7 @@ Available on GCP here: [web-chat](http://35.242.217.130)
 * Dockerized
 
 ### Run on Docker
-Zero dependency on jdk/scala/js/npm required.  
+Zero dependency on jdk/scala/npm required.  
 Running-up:  
 1. Substitute **your_ip** in file `/ui/.env.production` with local Docker host
 2. `docker-compose up`
