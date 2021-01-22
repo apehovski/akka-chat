@@ -35,7 +35,9 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
   val roomUsers = new mutable.HashMap[String, ActorRef]
   val roomHistory = new mutable.MutableList[ChatMessage]
 
-  val statsActor: ActorRef = system.actorOf(StatsActor.props(), "statsActor")
+  val statsActor: Option[ActorRef] =
+    sys.env.get("KAFKA_HOST") //only if env var provided
+      .map(_ => system.actorOf(StatsActor.props(), "statsActor"))
 
 
   def receive = {
@@ -53,7 +55,7 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
       roomUsers.foreach(userEntry =>
         userEntry._2 ! MessageAdded(newMessage)
       )
-      statsActor ! MessageAdded(newMessage)
+      statsActor.map(_ ! MessageAdded(newMessage))
 
     case LoadRoomHistory(limit) =>
       val historySeq = immutable.Seq(roomHistory.takeRight(limit): _*)
