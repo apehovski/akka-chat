@@ -7,18 +7,17 @@ import akka.kafka.scaladsl.Producer
 import akka.stream.scaladsl.Source
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.clients.producer.ProducerRecord
-import org.apache.kafka.common.serialization.StringSerializer
+import org.apache.kafka.common.serialization.{StringSerializer, UUIDSerializer}
 import org.chat.chatroom.ChatRoomActor.{ChatMessage, MessageAdded}
 import spray.json._
 
+import java.util.UUID
 import scala.concurrent.ExecutionContextExecutor
 import scala.util.{Failure, Success}
 
 object StatsActor {
   def props()(implicit system: ActorSystem, executionContext: ExecutionContextExecutor) =
     Props(new StatsActor())
-
-  final case class StatsMessageAdded(username: String, text: String)
 }
 
 trait StatsActorProtocol extends SprayJsonSupport with DefaultJsonProtocol {
@@ -30,7 +29,7 @@ class StatsActor(implicit system: ActorSystem, ec: ExecutionContextExecutor)
 
   val conf = ConfigFactory.load
   val producerSettings =
-    ProducerSettings(system, new StringSerializer, new StringSerializer)
+    ProducerSettings(system, new UUIDSerializer, new StringSerializer)
 
   def receive = {
 
@@ -41,8 +40,8 @@ class StatsActor(implicit system: ActorSystem, ec: ExecutionContextExecutor)
       log.info(s"Stats: prepare, topic: $topic message: $msg")
 
       Source.single(msg)
-        .map(value => new ProducerRecord[String, String](topic, value))
-        .runWith(Producer.plainSink[String, String](producerSettings))
+        .map(value => new ProducerRecord[UUID, String](topic, UUID.randomUUID(), value))
+        .runWith(Producer.plainSink[UUID, String](producerSettings))
         .onComplete {
           case Success(_) => log.info(s"Stats: Out sent successfully, topic: $topic message: $msg")
           case Failure(err) => log.error(err, s"Stats: Error while sending, topic: $topic message: $msg")

@@ -21,7 +21,6 @@ import scala.concurrent.duration._
 
 object RunApp extends App {
   implicit val system: ActorSystem = ActorSystem("chatActorSystem")
-  sys.addShutdownHook(system.terminate())
 
   val authRealm = "chat-realm";
 
@@ -69,5 +68,6 @@ object RunApp extends App {
   Http().bindAndHandle(route, "0.0.0.0", 8080).map { _ =>
     println(s"Server started at http://0.0.0.0:8080/")
   }
+  sys.addShutdownHook(system.terminate())
 
 }

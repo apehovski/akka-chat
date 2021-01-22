@@ -17,6 +17,22 @@ services:
     mem_limit: 2048m
     restart: always
 
+  chat-stats:
+    image: chat:stats
+    build:
+      context: ../
+      dockerfile: docker/stats/Dockerfile
+    networks:
+      - internal
+    ports:
+#      - 8081:8080
+      - 11001:11001 #debug
+    environment:
+      - JAVA_OPTS=-Xms512m -Xmx1024m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=11001
+      - KAFKA_HOST=kafka:9092
+    mem_limit: 1024m
+    restart: always
+
   chat-ui:
     image: chat:ui
     build:

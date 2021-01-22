@@ -26,7 +26,7 @@ object ChatRoomActor {
   final case class ChatMessage(username: String, text: String,
                                datetime: String = currDateTime())
 
-  def currDateTime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
+  def currDateTime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss.SSS"))
 }
 
 class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionContextExecutor)
@@ -49,7 +49,7 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
       roomUsers -= username
 
     case MessageToRoom(username, text) =>
-      log.info("MessageToRoom from " + username + " with text: " + text)
+      log.info(s"MessageToRoom from $username: $text")
       val newMessage = ChatMessage(username, text)
       roomHistory += newMessage
       roomUsers.foreach(userEntry =>

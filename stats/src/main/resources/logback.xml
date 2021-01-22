@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <target>System.out</target>
+        <encoder>
+            <pattern>%5p | %d{yyyy-MM-dd} %d{HH:mm:ss.SSS} | %logger{25} | %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/app.log</file>
+        <append>false</append>
+        <encoder>
+            <pattern>%5p | %d{yyyy-MM-dd} %d{HH:mm:ss.SSS} | %logger{25} | %m%n | %thread</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="org.apache.kafka" level="INFO"/>
+    <logger name="org.apache.kafka.common" level="WARN"/>
+
+    <root level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+        <!--<appender-ref ref="FILE"/>-->
+    </root>
+</configuration>
+
+
