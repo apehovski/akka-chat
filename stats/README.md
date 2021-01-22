@@ -13,10 +13,10 @@ For running-up:
 ### Check content of Kafka
 Input topic:  
 ```shell
-docker run -it --rm \\
-    --network docker_internal \\
-    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \\
-    bitnami/kafka:latest kafka-console-consumer.sh --bootstrap-server kafka:9092 \\ 
+docker run -it --rm \
+    --network docker_internal \
+    -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
+    bitnami/kafka:latest kafka-console-consumer.sh --bootstrap-server kafka:9092 \ 
     --topic chat-messages --from-beginning --property print.key=true
 ```
 
@@ -25,8 +25,8 @@ Output topic:
 docker run -it --rm \
     --network docker_internal \
     -e KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181 \
-    bitnami/kafka:latest kafka-console-consumer.sh --bootstrap-server kafka:9092  \\
-    --topic chat-stats --from-beginning --property print.key=true \\ 
+    bitnami/kafka:latest kafka-console-consumer.sh --bootstrap-server kafka:9092  \
+    --topic chat-stats --from-beginning --property print.key=true \
     --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
 
 ```
