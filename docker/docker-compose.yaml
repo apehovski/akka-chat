@@ -17,6 +17,16 @@ services:
     mem_limit: 2048m
     restart: always
 
+  chat-ui:
+    image: chat:ui
+    build:
+      context: ../
+      dockerfile: docker/ui/Dockerfile
+    networks:
+      - internal
+    ports:
+      - 9090:80
+
   chat-stats:
     image: chat:stats
     build:
@@ -32,16 +42,9 @@ services:
       - KAFKA_HOST=kafka:9092
     mem_limit: 1024m
     restart: always
-
-  chat-ui:
-    image: chat:ui
-    build:
-      context: ../
-      dockerfile: docker/ui/Dockerfile
-    networks:
-      - internal
-    ports:
-      - 9090:80
+    depends_on:
+      - kafka
+      - zookeeper
 
   zookeeper:
     image: bitnami/zookeeper:3.6.2
