@@ -10,9 +10,10 @@ services:
       - internal
     ports:
       - 8080:8080
-      - 11001:11001 #debug
+      - 11000:11000 #debug
     environment:
-      - JAVA_OPTS=-Xms512m -Xmx2048m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=11001
+      - JAVA_OPTS=-Xms512m -Xmx2048m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=11000
+      - KAFKA_HOST=kafka:9092
     mem_limit: 2048m
     restart: always
 
@@ -25,6 +26,25 @@ services:
       - internal
     ports:
       - 9090:80
+
+  zookeeper:
+    image: bitnami/zookeeper:3.6.2
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    networks:
+      - internal
+
+  kafka:
+    image: bitnami/kafka:2.7.0
+    ports:
+      - '9092:9092'
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+    networks:
+      - internal
 
 networks:
  internal:

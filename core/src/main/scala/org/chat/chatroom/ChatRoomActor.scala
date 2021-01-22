@@ -1,21 +1,24 @@
 package org.chat.chatroom
 
-import akka.actor.{Actor, ActorLogging, ActorRef, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
 import org.chat.chatroom.ChatRoomActor._
-import org.chat.user.UserActor
+import org.chat.stats.StatsActor
 import org.chat.ws.WsActor.{WSUserConnected, WSUserDisconnected}
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import scala.collection.{immutable, mutable}
+import scala.concurrent.ExecutionContextExecutor
 
 object ChatRoomActor {
-  def props(): Props = Props(new ChatRoomActor)
+  def props()(implicit system: ActorSystem, executionContext: ExecutionContextExecutor) =
+    Props(new ChatRoomActor)
 
   final case class AddUser(username: String, newUser: ActorRef)
   final case class RemoveUser(username: String)
 
   final case class MessageToRoom(username: String, text: String)
+  final case class MessageAdded(msg: ChatMessage)
 
   final case class LoadRoomHistory(limit: Int = 50)
   final case class LoadRoomHistoryResp(history: immutable.Seq[ChatMessage])
@@ -26,9 +29,13 @@ object ChatRoomActor {
   def currDateTime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"))
 }
 
-class ChatRoomActor extends Actor with ActorLogging {
+class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionContextExecutor)
+  extends Actor with ActorLogging {
+
   val roomUsers = new mutable.HashMap[String, ActorRef]
   val roomHistory = new mutable.MutableList[ChatMessage]
+
+  val statsActor: ActorRef = system.actorOf(StatsActor.props(), "statsActor")
 
 
   def receive = {
@@ -41,10 +48,12 @@ class ChatRoomActor extends Actor with ActorLogging {
 
     case MessageToRoom(username, text) =>
       log.info("MessageToRoom from " + username + " with text: " + text)
-      roomHistory += ChatMessage(username, text)
+      val newMessage = ChatMessage(username, text)
+      roomHistory += newMessage
       roomUsers.foreach(userEntry =>
-        userEntry._2 ! UserActor.MessageAdded(username, text)
+        userEntry._2 ! MessageAdded(newMessage)
       )
+      statsActor ! MessageAdded(newMessage)
 
     case LoadRoomHistory(limit) =>
       val historySeq = immutable.Seq(roomHistory.takeRight(limit): _*)
