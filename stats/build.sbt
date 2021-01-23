@@ -7,7 +7,6 @@ scalaVersion := "2.12.9"
 
 lazy val kafkaVersion = "2.7.0"
 lazy val circeVersion = "0.12.3"
-lazy val log4jVersion = "2.14.0"
 
 libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.3.3",

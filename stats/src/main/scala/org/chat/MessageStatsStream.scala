@@ -26,7 +26,7 @@ object MessageStatsStream extends App with LazyLogging {
 
   val config: Properties = {
     val p = new Properties()
-    p.put(StreamsConfig.APPLICATION_ID_CONFIG, "chat-stats")
+    p.put(StreamsConfig.APPLICATION_ID_CONFIG, "stats-app")
     p.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaHost)
     p
   }

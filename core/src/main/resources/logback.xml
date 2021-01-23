@@ -17,6 +17,10 @@
 
     <logger name="akka" level="INFO"/>
 <!--    <logger name="org.asynchttpclient.netty" level="INFO"/>-->
+    <logger name="org.apache.kafka" level="INFO"/>
+    <logger name="org.apache.kafka.common" level="WARN"/>
+    <logger name="org.apache.kafka.clients.consumer.KafkaConsumer" level="WARN"/>
+
 
     <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>

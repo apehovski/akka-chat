@@ -1,9 +1,11 @@
 package org.chat.chatroom
 
 import akka.actor.{Actor, ActorLogging, ActorRef, ActorSystem, Props}
+import org.chat.RunApp.kafkaEnabled
 import org.chat.chatroom.ChatRoomActor._
 import org.chat.stats.StatsActor
-import org.chat.ws.WsActor.{WSUserConnected, WSUserDisconnected}
+import org.chat.stats.StatsActor.{OutcomingKafka, Stats}
+import org.chat.ws.WsActor.{OutcomingWS, WSStatsUpdated, WSUserConnected, WSUserDisconnected, WsSerializable}
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -18,13 +20,13 @@ object ChatRoomActor {
   final case class RemoveUser(username: String)
 
   final case class MessageToRoom(username: String, text: String)
-  final case class MessageAdded(msg: ChatMessage)
+  final case class MessageAdded(msg: ChatMessage) extends OutcomingWS with OutcomingKafka
 
   final case class LoadRoomHistory(limit: Int = 50)
   final case class LoadRoomHistoryResp(history: immutable.Seq[ChatMessage])
 
   final case class ChatMessage(username: String, text: String,
-                               datetime: String = currDateTime())
+                               datetime: String = currDateTime()) extends WsSerializable
 
   def currDateTime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss.SSS"))
 }
@@ -36,8 +38,8 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
   val roomHistory = new mutable.MutableList[ChatMessage]
 
   val statsActor: Option[ActorRef] =
-    sys.env.get("KAFKA_HOST") //only if env var provided
-      .map(_ => system.actorOf(StatsActor.props(), "statsActor"))
+    if (kafkaEnabled()) Some(system.actorOf(StatsActor.props(), "statsActor"))
+    else None
 
 
   def receive = {
@@ -52,9 +54,7 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
       log.info(s"MessageToRoom from $username: $text")
       val newMessage = ChatMessage(username, text)
       roomHistory += newMessage
-      roomUsers.foreach(userEntry =>
-        userEntry._2 ! MessageAdded(newMessage)
-      )
+      roomUsers.values.foreach(_ ! MessageAdded(newMessage))
       statsActor.map(_ ! MessageAdded(newMessage))
 
     case LoadRoomHistory(limit) =>
@@ -71,6 +71,11 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
           roomUsers.get(nick)
             .foreach(_ ! wsDisconnect)
         )
+
+    case stats: Stats => {
+        roomUsers.values
+          .foreach(_ ! WSStatsUpdated(stats))
+      }
 
   }
 

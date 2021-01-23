@@ -28,7 +28,7 @@ trait ChatRoomProtocol extends SprayJsonSupport with DefaultJsonProtocol {
 }
 
 object ChatRoomService {
-  val counter = new AtomicInteger(0);
+  val counter = new AtomicInteger(0)
 }
 
 class ChatRoomService(generalRoomActor: ActorRef)
@@ -67,10 +67,10 @@ class ChatRoomService(generalRoomActor: ActorRef)
 
 
   def wsFlow(): Flow[Message, Message, Any] = {
-    val (outputQueue, output) = Source.queue[Message](10, OverflowStrategy.fail).preMaterialize()
+    val (outputQueue, output) = Source.queue[Message](64, OverflowStrategy.dropBuffer).preMaterialize()
 
     val inputActor = system.actorOf(WsActor.props(outputQueue, generalRoomActor), "wsActor-" + counter.incrementAndGet())
-    val (_, input) = Sink.actorRef(inputActor, WSDisconnected()).preMaterialize();
+    val (_, input) = Sink.actorRef(inputActor, WSDisconnected()).preMaterialize()
 
     Flow.fromSinkAndSource(input, output)
   }
