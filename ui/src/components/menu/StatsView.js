@@ -4,8 +4,7 @@ import {useSelector} from "react-redux";
 
 
 const StyledWrapper = styled.div`
-  // border: 1px solid black;
-  //TODO word-wrap
+  margin: 0 0 0 5px;
 `
 
 export default () => {
@@ -13,12 +12,15 @@ export default () => {
 
   return (
     <StyledWrapper>
-      <p>Top {stats.length} words:</p>
-      {stats.map((item, index) => (
-        <div key={index}>
-          <span>{item.word}</span> - <span>{item.count}</span>
-        </div>
-      ))}
+      <h6>Top {stats.length} words:</h6>
+      <ul>
+        {stats.map((item, index) => (
+          <li key={index}>
+            <span>{item.word} </span>
+            (<span>{item.count}</span>)
+          </li>
+        ))}
+      </ul>
     </StyledWrapper>
   );
 }
