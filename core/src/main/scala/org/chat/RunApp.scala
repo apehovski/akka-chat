@@ -6,22 +6,18 @@ import akka.http.scaladsl.model.HttpEntity
 import akka.http.scaladsl.model.ws.{Message, TextMessage}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import akka.http.scaladsl.server.directives.Credentials
 import akka.kafka.scaladsl.Consumer
 import akka.kafka.{ConsumerSettings, Subscriptions}
-import akka.pattern.ask
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Flow, Source}
 import akka.util.Timeout
 import ch.megard.akka.http.cors.scaladsl.CorsDirectives._
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.common.serialization.{LongDeserializer, StringDeserializer}
-import org.chat.auth.AuthActor.IsActive
-import org.chat.auth.{AuthActor, AuthService}
+import org.chat.auth.{AuthActor, AuthService, ChatAuthenticator}
 import org.chat.chatroom.{ChatRoomActor, ChatRoomService}
 import org.chat.stats.StatsActor.Stats
 
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 object RunApp extends App {
@@ -36,6 +32,7 @@ object RunApp extends App {
 
   private val generalRoom: ActorRef = system.actorOf(ChatRoomActor.props(), "generalRoomActor")
   private val authActor: ActorRef = system.actorOf(AuthActor.props(generalRoom), "authActor")
+  private val chatAuth = new ChatAuthenticator(authActor)
 
   val route = Route.seal {
     cors() {
@@ -47,23 +44,12 @@ object RunApp extends App {
           path("pingWS") {
             handleWebSocketMessages(pingWSHandler)
           },
-          new AuthService(authActor).routes,
-          new ChatRoomService(generalRoom).routes
+          new AuthService(authActor, chatAuth).routes,
+          new ChatRoomService(generalRoom, chatAuth).routes
         )
       }
     }
   }
-
-  def chatAuthenticator(credentials: Credentials): Future[Option[String]] =
-    credentials match {
-      case c @ Credentials.Provided(username)
-        if c.verify(username) => //username equals password
-        (authActor ? IsActive(username))
-            .mapTo[Boolean]
-            .map(isActive => if (isActive) Some(username) else None)
-
-      case _ => Future.successful(None)
-    }
 
   def pingWSHandler: Flow[Message, Message, Any] =
     Flow[Message].mapConcat {

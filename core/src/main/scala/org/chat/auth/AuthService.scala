@@ -5,7 +5,7 @@ import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport
 import akka.http.scaladsl.server.Directives.{complete, path, _}
 import akka.pattern.ask
 import akka.util.Timeout
-import org.chat.RunApp.{authRealm, chatAuthenticator}
+import org.chat.RunApp.authRealm
 import org.chat.auth.AuthActor.{Login, LoginResp, Logout, LogoutResp}
 import spray.json.DefaultJsonProtocol
 
@@ -19,7 +19,8 @@ trait AuthServiceProtocol extends SprayJsonSupport with DefaultJsonProtocol {
   implicit val logoutRespFormat = jsonFormat2(LogoutResp)
 }
 
-class AuthService(authActor: ActorRef)(implicit executionContext: ExecutionContext, timeout: Timeout)
+class AuthService(authActor: ActorRef, chatAuth: ChatAuthenticator)
+                 (implicit ec: ExecutionContext, timeout: Timeout)
   extends AuthServiceProtocol {
 
   lazy val routes = {
@@ -35,7 +36,7 @@ class AuthService(authActor: ActorRef)(implicit executionContext: ExecutionConte
       },
 
       path("logout") {
-        authenticateBasicAsync(authRealm, chatAuthenticator) { username =>
+        authenticateBasicAsync(authRealm, chatAuth.check) { username =>
           post {
             complete {
               (authActor ? Logout(username)).mapTo[LogoutResp]

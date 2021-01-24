@@ -8,7 +8,8 @@ import akka.pattern.ask
 import akka.stream.scaladsl.{Flow, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import akka.util.Timeout
-import org.chat.RunApp.{authRealm, chatAuthenticator}
+import org.chat.RunApp.authRealm
+import org.chat.auth.ChatAuthenticator
 import org.chat.chatroom.ChatRoomActor.{ChatMessage, LoadRoomHistory, LoadRoomHistoryResp, MessageToRoom}
 import org.chat.chatroom.ChatRoomService.counter
 import org.chat.ws.WsActor
@@ -31,8 +32,8 @@ object ChatRoomService {
   val counter = new AtomicInteger(0)
 }
 
-class ChatRoomService(generalRoomActor: ActorRef)
-                     (implicit executionContext: ExecutionContext, timeout: Timeout,
+class ChatRoomService(generalRoomActor: ActorRef, chatAuth: ChatAuthenticator)
+                     (implicit ec: ExecutionContext, timeout: Timeout,
                       materializer: ActorMaterializer, system: ActorSystem)
   extends ChatRoomProtocol {
 
@@ -40,7 +41,7 @@ class ChatRoomService(generalRoomActor: ActorRef)
     concat(
       path("roomHistory") {
         get {
-          authenticateBasicAsync(authRealm, chatAuthenticator) { username =>
+          authenticateBasicAsync(authRealm, chatAuth.check) { username =>
             complete {
               (generalRoomActor ? LoadRoomHistory()).mapTo[LoadRoomHistoryResp]
             }
@@ -50,7 +51,7 @@ class ChatRoomService(generalRoomActor: ActorRef)
 
       path("sendRoomMessage") {
         post {
-          authenticateBasicAsync(authRealm, chatAuthenticator) { username =>
+          authenticateBasicAsync(authRealm, chatAuth.check) { username =>
             entity(as[JsValue]) { json =>
               val text = json.asJsObject.fields("text").convertTo[String]
               generalRoomActor ! MessageToRoom(username, text)
