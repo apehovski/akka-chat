@@ -6,12 +6,13 @@ Pet project for some learning in scope of modern web-technologies.
 Available on GCP here: [web-chat](http://35.242.217.130)  
 
 ## Features
-* *Akka* stack for backend (akka-http, akka-streams)
-* *React* stack for front
-* Notifications about new messages via *Websockets*
+* Akka stack for backend (akka-http, akka-streams)
+* React.js stack for front
+* Notifications via Websockets
+* Kafka Streams for stats calculation
 * Basic Auth, CORS
 * Fully in-memory storage
-* Integration/performance tests using *Gatling*
+* Integration/performance tests using Gatling
 * Dockerized
 
 ### Run on Docker
@@ -26,3 +27,6 @@ See then:
 * [Statistics](/stats/README.md)  
 * [Frontend](/ui/README.md)  
 * [Integration tests](/itest/README.md)  
+
+### Functionality sample
+![Conductor](web-chat.png)
