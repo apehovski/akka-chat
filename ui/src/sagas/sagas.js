@@ -2,13 +2,14 @@ import {all} from 'redux-saga/effects';
 
 import {config} from '../utils/utils';
 import {doLoginSaga, doLogoutSaga} from "./authSagas";
-import {doMessageSaga, loadGeneralMessagesSaga, wsHandleReceivedMessageSaga} from "./roomSagas";
+import {doMessageSaga, loadGeneralMessagesSaga, wsNewMessageSaga,} from "./roomSagas";
+import {wsFullStatsSaga, wsStatsUpdateSaga} from "./statsSagas";
 
 export default function* rootSaga() {
   yield all([
     doLoginSaga(), doLogoutSaga(),
     loadGeneralMessagesSaga(), doMessageSaga(),
-    wsHandleReceivedMessageSaga()
+    wsNewMessageSaga(), wsFullStatsSaga(), wsStatsUpdateSaga()
   ]);
 }
 

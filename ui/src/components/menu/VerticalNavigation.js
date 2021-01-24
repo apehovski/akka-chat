@@ -7,10 +7,10 @@ export default () => (
     <ListGroupItem active action variant="info" href="/home">
         #general
     </ListGroupItem>
-    <ListGroupItem action variant="info" href="/another">
+    <ListGroupItem action variant="info" href="/notexist">
         #team
     </ListGroupItem>
-    <ListGroupItem action variant="info" href="/third">
+    <ListGroupItem action variant="info" href="/unknown">
         #offtopic
     </ListGroupItem>
   </ListGroup>

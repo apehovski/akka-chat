@@ -1,5 +1,6 @@
 import {RENDER_GENERAL_MESSAGES, RENDER_MESSAGE} from "../actions/roomActions";
 import {getColor} from "../utils/colorStorage";
+import {LOGOUT_RESP} from "../actions/authActions";
 
 const initialState = {
   messageList: [],
@@ -38,6 +39,12 @@ export default function roomReducer(state = initialState, action) {
         messageList: updMessageList
       };
     }
+
+    case LOGOUT_RESP:
+      return {
+        ...state,
+        messageList: initialState.messageList
+      }
 
     default:
       return state;

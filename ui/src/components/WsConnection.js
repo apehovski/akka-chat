@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {wsReceivedMessage} from "../actions/roomActions";
+import {wsNewMessage} from "../actions/roomActions";
 import {config} from "../utils/utils";
+import {wsFullStats, wsStatsUpdate} from "../actions/statsActions";
 
 
 const mapStateToProps = store => {
@@ -19,8 +20,23 @@ class WsConnection extends Component {
       console.log('WS connected')
     }
     wsSocket.onmessage = event => {
-      const message = JSON.parse(event.data)
-      this.props.dispatch(wsReceivedMessage(message))
+      const incoming = JSON.parse(event.data)
+      switch (incoming.type) {
+        case "chat-message":
+          this.props.dispatch(wsNewMessage(incoming.msg))
+          break;
+
+        case "full-stats":
+          this.props.dispatch(wsFullStats(incoming.full))
+          break;
+
+        case "stats-update":
+          this.props.dispatch(wsStatsUpdate(incoming.update))
+          break;
+
+        default:
+          console.warn("Unknown WS incoming: " + JSON.stringify(incoming))
+      }
     }
 
     this.state = {

@@ -1,25 +1,30 @@
 import {call, put, select, takeEvery} from "redux-saga/effects";
 
 import {isMockDev} from "../utils/utils";
-import {getColor, generateAllColors} from "../utils/colorStorage";
-import devMessages, {addMockMessage} from "../dev_data/messages";
+import {generateAllColors, getColor} from "../utils/colorStorage";
+import mockMessages, {addMockMessage} from "../dev_data/messages";
+import mockStats from "../dev_data/stats";
 import {
   LOAD_GENERAL_MESSAGES,
   loadGeneralMessages,
   RENDER_GENERAL_MESSAGES,
   RENDER_MESSAGE,
   SEND_MESSAGE,
-  WS_RECEIVED_MESSAGE
+  WS_NEW_MESSAGE
 } from "../actions/roomActions";
 import {get, post} from "./sagas";
+import {wsFullStats} from "../actions/statsActions";
+
+
 
 export function* fetchGeneralMessages() {
   let messageList = [];
   if (isMockDev()) {
-    messageList = Object.assign([], devMessages)
-    if (!getColor(devMessages[0].username)) {
+    messageList = Object.assign([], mockMessages)
+    if (!getColor(mockMessages[0].username)) {
       generateAllColors(messageList);
     }
+    yield put(wsFullStats(mockStats));
 
   } else {
     const username = yield select(store => store.authReducer.userProfile.username)
@@ -66,10 +71,10 @@ export function* doMessageSaga() {
   yield takeEvery(SEND_MESSAGE, sendMessageReq);
 }
 
-export function* wsReceivedMessage(action) {
+export function* wsReceivedNewMessage(action) {
   yield put({ type: RENDER_MESSAGE, message: action.message });
 }
 
-export function* wsHandleReceivedMessageSaga() {
-  yield takeEvery(WS_RECEIVED_MESSAGE, wsReceivedMessage);
+export function* wsNewMessageSaga() {
+  yield takeEvery(WS_NEW_MESSAGE, wsReceivedNewMessage);
 }

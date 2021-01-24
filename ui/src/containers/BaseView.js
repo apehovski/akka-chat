@@ -5,6 +5,7 @@ import RoomView from "../components/room/RoomView";
 import Container from "react-bootstrap/Container";
 import {Col, Row} from "react-bootstrap";
 import WsConnection from "../components/WsConnection";
+import {isMockDev} from "../utils/utils";
 
 const ContainerStyled = styled(Container)`
 `
@@ -21,7 +22,7 @@ const RightCol = styled(Col)`
 const BaseView = () => {
   return (
     <ContainerStyled>
-      <WsConnection />
+      { !isMockDev() && <WsConnection/> }
 
       <Row>
         <LeftCol xs={6} md={4}>
