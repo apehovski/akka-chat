@@ -9,3 +9,6 @@ API available on: http://localhost:8080
 `sbt stage`
 
 Script to run: /target/universal/stage/bin/core
+
+### Running unit tests
+`sbt test`

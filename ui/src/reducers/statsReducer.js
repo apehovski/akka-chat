@@ -8,11 +8,12 @@ const initialState = {
 export default function authReducer(state = initialState, action) {
   switch (action.type) {
     case RENDER_FULL_STATS: {
-      action.fullStats.sort((a, b) => b.count - a.count);
+      let fullStatsList = Object.assign([], action.fullStats)
+      fullStatsList.sort((a, b) => b.count - a.count);
 
       return {
         ...state,
-        stats: action.fullStats
+        stats: fullStatsList
       };
     }
 
@@ -32,9 +33,9 @@ export default function authReducer(state = initialState, action) {
     }
 
     case REPLACE_STATS_UPDATE: {
-      let updStatsList = Object.assign([], state.stats)
-      updStatsList.splice(updStatsList.length - 1, 1)
-      updStatsList.push(action.statsUpdate)
+      let updStatsList = Object.assign([], state.stats);
+      updStatsList.pop();
+      updStatsList.push(action.statsUpdate);
       updStatsList.sort((a, b) => b.count - a.count);
 
       return {
