@@ -10,7 +10,7 @@ services:
       - internal
     ports:
       - 8080:8080
-      - 11000:11000 #debug
+      - 11000:11000
     environment:
       - JAVA_OPTS=-Xms512m -Xmx2048m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=11000
       - KAFKA_HOST=kafka:9092
@@ -35,7 +35,7 @@ services:
     networks:
       - internal
     ports:
-      - 11001:11001 #debug
+      - 11001:11001
     environment:
       - JAVA_OPTS=-Xms512m -Xmx1024m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=11001
       - KAFKA_HOST=kafka:9092

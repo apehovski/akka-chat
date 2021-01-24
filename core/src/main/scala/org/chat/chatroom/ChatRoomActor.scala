@@ -5,7 +5,7 @@ import org.chat.RunApp.kafkaEnabled
 import org.chat.chatroom.ChatRoomActor._
 import org.chat.stats.StatsActor
 import org.chat.stats.StatsActor.{OutcomingKafka, Stats}
-import org.chat.ws.WsActor.{OutcomingWS, WSStatsUpdated, WSUserConnected, WSUserDisconnected, WsSerializable}
+import org.chat.ws.WsActor._
 
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -26,7 +26,7 @@ object ChatRoomActor {
   final case class LoadRoomHistoryResp(history: immutable.Seq[ChatMessage])
 
   final case class ChatMessage(username: String, text: String,
-                               datetime: String = currDateTime()) extends WsSerializable
+                               datetime: String = currDateTime())
 
   def currDateTime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss.SSS"))
 }
@@ -40,6 +40,8 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
   val statsActor: Option[ActorRef] =
     if (kafkaEnabled()) Some(system.actorOf(StatsActor.props(), "statsActor"))
     else None
+
+  val highestStats: mutable.SortedMap[String, Long] = mutable.SortedMap()
 
 
   def receive = {
@@ -63,19 +65,44 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
 
     case wsConnect: WSUserConnected =>
       roomUsers.get(wsConnect.username)
-        .foreach(_ ! wsConnect)
+        .foreach { userActor =>
+          userActor ! wsConnect
+
+          val fullStats = highestStats.to[immutable.Seq]
+            .map(entry => Stats(entry._1, entry._2))
+          userActor ! WSFullStats(fullStats)
+        }
 
     case wsDisconnect: WSUserDisconnected =>
-      wsDisconnect.username
-        .map(nick =>
-          roomUsers.get(nick)
-            .foreach(_ ! wsDisconnect)
-        )
+      for {
+        uname <- wsDisconnect.username
+        userActor <- roomUsers.get(uname)
+      } yield userActor ! wsDisconnect
 
-    case stats: Stats => {
-        roomUsers.values
-          .foreach(_ ! WSStatsUpdated(stats))
+    case newStats: Stats => {
+      //send via WS only 5 most used words
+      val maxSize = 5
+      log.info(s"Current stats: $highestStats")
+
+      highestStats.size match {
+        case lowSize if lowSize < maxSize =>
+          highestStats += (newStats.word -> newStats.count)
+          roomUsers.values
+            .foreach(_ ! WSStatsUpdate(newStats))
+
+        case _ => //max size
+          Some(highestStats.minBy(_._2))
+            .filter(currMin => newStats.count > currMin._2)
+            .foreach { currMin =>
+              highestStats -= currMin._1
+              highestStats += (newStats.word -> newStats.count)
+              log.info(s"Updated stats: $highestStats")
+
+              roomUsers.values
+                .foreach(_ ! WSStatsUpdate(newStats))
+            }
       }
+    }
 
   }
 

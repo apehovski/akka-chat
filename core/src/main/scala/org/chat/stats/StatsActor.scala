@@ -10,7 +10,6 @@ import com.typesafe.config.ConfigFactory
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.apache.kafka.common.serialization.{StringSerializer, UUIDSerializer}
 import org.chat.chatroom.ChatRoomActor.{ChatMessage, MessageAdded}
-import org.chat.ws.WsActor.WsSerializable
 import spray.json._
 
 import java.util.UUID
@@ -25,7 +24,7 @@ object StatsActor {
   trait IncomingKafka extends KafkaEntity
   trait OutcomingKafka extends KafkaEntity
 
-  final case class Stats(word: String, count: Long) extends IncomingKafka with WsSerializable
+  final case class Stats(word: String, count: Long) extends IncomingKafka
 }
 
 trait StatsActorProtocol extends SprayJsonSupport with DefaultJsonProtocol {
