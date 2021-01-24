@@ -97,7 +97,9 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
           Some(highestStats.minBy(_._2))
             .filter(currMin => newStats.count > currMin._2)
             .foreach { currMin =>
-              highestStats -= currMin._1
+              if (currMin._1 != newStats.word) {
+                highestStats -= currMin._1
+              }
               highestStats += (newStats.word -> newStats.count)
               log.info(s"Updated stats: $highestStats")
 

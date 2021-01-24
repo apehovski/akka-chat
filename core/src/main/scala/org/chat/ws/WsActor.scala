@@ -50,7 +50,7 @@ class WsActor(wsOutputQueue: SourceQueue[Message], generalRoomActor: ActorRef)(i
 
   def receive = {
     case tm: TextMessage =>
-      log.info("In WS: " + tm)
+      log.info(s"In WS from $username: $tm")
       if (username.isEmpty) {
         tm.textStream
           .map(json => json.parseJson.convertTo[WSLogin].username)
@@ -67,7 +67,7 @@ class WsActor(wsOutputQueue: SourceQueue[Message], generalRoomActor: ActorRef)(i
         case f: WSFullStats => f.toJson.compactPrint
         case u: WSStatsUpdate => u.toJson.compactPrint
       }
-      log.info(s"Out WS: $out")
+      log.info(s"Out WS to $username: $out")
       wsOutputQueue.offer(TextMessage(out))
 
     case WSDisconnected() =>
