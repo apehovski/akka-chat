@@ -17,11 +17,12 @@ Available on GCP here: [web-chat](http://35.242.217.130)
 ### Run on Docker
 Zero dependency on jdk/scala/npm required.  
 Running-up:  
-1. Substitute **your_ip** in file `/ui/.env.production` with local Docker host
+1. In docker-compose.yaml: substitute *CHAT_SERVER_HOST=localhost* with your Docker ip
 2. `docker-compose up`
 
 ### Run for local development
 See then:  
-* [Server](/core/README.md)  
+* [Core](/core/README.md)  
+* [Statistics](/stats/README.md)  
 * [Frontend](/ui/README.md)  
 * [Integration tests](/itest/README.md)  

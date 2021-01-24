@@ -8,7 +8,8 @@ export function formatMessageDate(datetime) {
   return dateFormat(datetime, "dd.mm.yyyy HH:MM:ss");
 }
 
+const host = process.env.REACT_APP_SERVER_HOST
 export const config = {
-  API: process.env.REACT_APP_SERVER_URL,
-  WS_API: process.env.REACT_APP_WS_SERVER_URL,
+  API:    'http://' + host + ':8080/api',
+  WS_API: 'ws://' + host + ':8080/api/wsConnection'
 }

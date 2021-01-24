@@ -1,6 +1,9 @@
 # 1. Build
 FROM node:14 AS builder
 
+ARG CHAT_SERVER_HOST
+ENV REACT_APP_SERVER_HOST $CHAT_SERVER_HOST
+
 COPY /ui /opt/app/
 WORKDIR /opt/app
 # Install node modules and build for production
