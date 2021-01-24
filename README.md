@@ -28,6 +28,5 @@ See then:
 * [Frontend](/ui/README.md)  
 * [Integration tests](/itest/README.md)  
 
-### Functionality sample
+## Functionality sample
 ![Home view](web-chat.png)
-![Home view](web-chat-2.png)
