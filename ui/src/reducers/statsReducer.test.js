@@ -31,13 +31,38 @@ describe('Test statsReducer', () => {
     expect(preState.stats).toHaveLength(5)
     expect(preState.stats[0].count).toEqual(35)
 
-    //do update
+    //do update with new word
     const newValue = {word: 'test-word', count: 125}
     const postState = statsReducer(preState, {type: "REPLACE_STATS_UPDATE", statsUpdate: newValue})
 
     expect(postState.stats).toHaveLength(5)
     expect(postState.stats[0].count).toEqual(125);
+    expect(postState.stats[0].word).toEqual('test-word');
     expect(postState.stats[1].count).toEqual(35);
+    expect(postState.stats[1].word).toEqual('Long long long long long long long long long long long long long long long word');
+    expect(postState.stats[2].count).toEqual(15);
+    expect(postState.stats[2].word).toEqual('WordOne');
+  });
+
+  it('should do replace with existing word and sort', () => {
+    const initialState = {stats: []}
+
+    //load full
+    const preState = statsReducer(initialState, {type: "RENDER_FULL_STATS", fullStats: mockStats})
+    expect(preState.stats).toHaveLength(5)
+    expect(preState.stats[0].count).toEqual(35)
+
+    //do update with existing word
+    const newValue = {word: 'WordOne', count: 125}
+    const postState = statsReducer(preState, {type: "REPLACE_STATS_UPDATE", statsUpdate: newValue})
+
+    expect(postState.stats).toHaveLength(5)
+    expect(postState.stats[0].count).toEqual(125);
+    expect(postState.stats[0].word).toEqual('WordOne');
+    expect(postState.stats[1].count).toEqual(35);
+    expect(postState.stats[1].word).toEqual('Long long long long long long long long long long long long long long long word');
+    expect(postState.stats[2].count).toEqual(12);
+    expect(postState.stats[2].word).toEqual('WordTwo');
   });
 
 });

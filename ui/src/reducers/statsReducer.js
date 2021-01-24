@@ -33,8 +33,15 @@ export default function authReducer(state = initialState, action) {
     }
 
     case REPLACE_STATS_UPDATE: {
+      const newWord = action.statsUpdate.word;
       let updStatsList = Object.assign([], state.stats);
-      updStatsList.pop();
+
+      const idxToReplace = updStatsList.findIndex(elem => elem.word === newWord)
+      if (idxToReplace !== -1) {
+        updStatsList.splice(idxToReplace, 1);
+      } else {
+        updStatsList.pop();
+      }
       updStatsList.push(action.statsUpdate);
       updStatsList.sort((a, b) => b.count - a.count);
 

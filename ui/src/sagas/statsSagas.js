@@ -16,7 +16,7 @@ export function* wsFullStatsSaga() {
 }
 
 export function* wsReceivedStatsUpdate(action) {
-  const currStats = yield select(store => store.stats)
+  const currStats = yield select(store => store.statsReducer.stats)
 
   if (currStats.length === 5) {
     yield put({ type: REPLACE_STATS_UPDATE, statsUpdate: action.statsUpdate })
