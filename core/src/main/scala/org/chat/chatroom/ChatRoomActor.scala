@@ -29,6 +29,9 @@ object ChatRoomActor {
                                datetime: String = currDateTime())
 
   def currDateTime(): String = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss.SSS"))
+
+  sealed trait UnitTesting
+  final case object GetStats extends UnitTesting
 }
 
 class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionContextExecutor)
@@ -103,6 +106,12 @@ class ChatRoomActor(implicit system: ActorSystem, executionContext: ExecutionCon
             }
       }
     }
+
+    case GetStats =>
+      sender ! highestStats
+
+    case any =>
+      log.warning(s"Unknown message: $any")
 
   }
 
