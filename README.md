@@ -29,4 +29,5 @@ See then:
 * [Integration tests](/itest/README.md)  
 
 ### Functionality sample
-![Conductor](web-chat.png)
+![Home view](web-chat.png)
+![Home view](web-chat-2.png)
