@@ -29,4 +29,4 @@ See then:
 * [Integration tests](/itest/README.md)  
 
 ## Functionality sample
-![Home view](web-chat-view.png)
+![Home view](web-chat.png)
